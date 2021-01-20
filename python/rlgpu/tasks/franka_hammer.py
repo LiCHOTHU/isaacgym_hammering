@@ -545,7 +545,7 @@ def compute_franka_reward(
     gripper_above_hammer_weight = 1.0
     gripper_to_hammer_dist_weight = 10.0
     gripper_downward_weight = 5.0
-    gripper_hammer_y_weight = 0.0
+    gripper_hammer_y_weight = 3.0
     gripper_both_sides_bonus = 100.0
     hammer_lift_weight = 1000.0
     hammer_init_height = 0.42
