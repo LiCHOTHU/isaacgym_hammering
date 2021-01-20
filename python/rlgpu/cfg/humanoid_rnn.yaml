@@ -1,0 +1,47 @@
+# if given, will override the device setting in gym. 
+env: 
+  powerScale: 1.0
+  numEnvs: 1024
+  envSpacing: 4
+  isFlagrun: False
+  enableDebugVis: False
+  exportToUSD: False
+
+  # reward parameters
+  headingWeight: 0.5
+  upWeight: 0.1
+
+  # cost parameters
+  actionsCost: 0.01
+  energyCost: 0.05
+  dofVelocityScale: 0.1
+  angularVelocityScale: 0.25
+  contactForceScale: 0.0004
+  jointsAtLimitCost: 0.4
+  deathCost: -1.0
+  terminationHeight: 0.79
+  upTermination: -0.4
+
+  plane:
+    staticFriction: 1.0   # [-]
+    dynamicFriction: 1.0  # [-]
+    restitution: 0.0      # [-]
+
+sim:
+  substeps: 2
+  physx:
+    num_threads: 4
+    solver_type: 1  # 0: pgs, 1: tgs
+    num_position_iterations: 4
+    num_velocity_iterations: 1
+    contact_offset: 0.02
+    rest_offset: 0.0
+    bounce_threshold_velocity: 0.5
+    max_depenetration_velocity: 1.0
+
+  flex:
+    num_inner_iterations: 10
+    warm_start: 0.25
+
+task:
+  randomize: False

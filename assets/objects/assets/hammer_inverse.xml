@@ -1,0 +1,16 @@
+<mujocoinclude>
+    <body childclass="hmr_base" name="hammer" euler="1.57 3.14 1.57">
+        <inertial pos="0 0 0" mass=".01" diaginertia="0.001 0.001 0.001"/>
+
+<body name="ham2">
+  <geom material="hmr_wood" type="mesh"  mesh="hammer_head"/>
+  <geom name="head_geom" class="hmr_col" type="mesh"  mesh="hammer_head" density="20000" solimp="0.9 0.95 0.001" solref="0.02 1"/>
+</body>
+
+<body name="ham1">
+<geom material="hmr_metal" type="mesh"  mesh="hammer_handle"/>
+<geom name="handle_geom" class="hmr_col" type="mesh"  mesh="hammer_handle" density="20000"/>
+</body>
+
+    </body>
+</mujocoinclude>

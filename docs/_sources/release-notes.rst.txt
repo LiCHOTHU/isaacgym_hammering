@@ -1,0 +1,71 @@
+Release Notes
+##############
+
+1.0.preview1
+=============
+
+New Features
+-------------
+
+- Implemented end-to-end GPU pipeline for physics simulation, which allows interacting with simulations on the GPU without copying data to or from the host.
+- Added new Tensor API for physics state and control, on both CPU and GPU.
+- Added Pytorch interop utilities for the Tensor API.
+- Added a new simple framework for reinforcement learning and a collection of sample tasks.
+- Added new configurable domain randomization features.
+- Added support for fixed and spatial tendons with PhysX.
+- Added support for user-defined force sensors attached to articulation links with PhysX.
+- Exposed DOF forces in PhysX.
+- Added Jacobian and generalized mass matrices with PhysX.
+- Improved PVD support - can connect to PVD remotely or log to file.
+- Improved contact handling with multiple substeps.
+- Added support for multiple subscenes to parallelize computations with CPU PhysX.
+- Improved contact handling performance in PhysX.
+- Support for rigid dynamic actors in PhysX to increase performance with single-body actors.
+- Support for custom aggregates with PhysX.
+- Exposed joint armature and joint friction in PhysX.
+- Added support for soft contacts with Flex.
+- Added stress tensors with Flex.
+- Added pneumatic pressure/target tensors with Flex.
+- Added soft materials with Flex.
+- Added new simulation and asset/actor options for Flex and PhysX.
+- Parsing tendon definitions from MJCF.
+- Loading cylinder geometry from MJCF.
+- Loading visual meshes from MJCF.
+- Generating filters from contact specification in MJCF.
+- Improved support for multiple sensor cameras per env.
+- Improved Z-up simulation support.
+- Updated PhysX and FleX versions.
+- Viewer sync can be toggled by pressing V (disabling sync increases performance, especially with the GPU pipeline).
+- Improved setup scripts.
+- Updated documentation and examples.
+- Updated docker images.
+
+Removed Features
+-----------------
+
+- Removed Python multiprocessing support, which is superseded by the new Tensor API.
+- Removed old ``rlbase`` module and examples, which are replaced by the new RL framework designed around the Tensor API.
+- Removed old RTX renderer.
+
+Changes
+--------
+
+- Renamed package from ``carbongym`` to ``isaacgym``.
+- Improved quaternion-Euler conversion utilities.
+
+Bug Fixes
+----------
+
+- Numerous physics bug fixes and simulation stability improvements.
+- Fixes and improvements to URDF and MJCF importers.
+- Fixes and improvements to camera sensors.
+
+Known Issues and Limitations
+-----------------------------
+
+- Most of the rigid body tensor API is only available with PhysX.
+- Soft body support is currently only available with FleX.
+- Missing tensor API for setting all rigid body states: root and DOF state tensors can be used instead.
+- Missing API for configuring properties of spatial tendons.
+- URDF importer still doesn't support loading STL and DAE meshes, only OBJ.
+- When using the GPU pipeline, DOF states don't refresh in the viewer.

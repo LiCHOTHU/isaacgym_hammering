@@ -1,0 +1,365 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Reinforcement Learning Examples &mdash; Isaac Gym  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/isaac_custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Bundled Assets" href="assets.html" />
+    <link rel="prev" title="Programming Examples" href="simple.html" />
+    <link href="../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Isaac Gym
+          
+
+          
+            
+            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Guide:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about_gym.html">About Isaac Gym</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="simple.html">Programming Examples</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Reinforcement Learning Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#common-command-line-options">Common Command Line Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#list-of-examples">List of Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cartpole-cartpole-py">Cartpole (cartpole.py)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cartpole-y-up-cartpole-y-up-py">Cartpole Y-Up (cartpole_y_up.py)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ball-balance-ball-balance-py">Ball Balance (ball_balance.py)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ant-ant-py">Ant (ant.py)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#humanoid-humanoid-py">Humanoid (humanoid.py)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#franka-drawer-opening-franka-py">Franka Drawer Opening (franka.py)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#shadow-hand-object-manipulation-shadow-hand-py">Shadow Hand Object Manipulation (shadow_hand.py)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="assets.html">Bundled Assets</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rl/index.html">Reinforcement Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faqs.html">Frequently Asked Questions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Isaac Gym</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Examples</a> &raquo;</li>
+        
+      <li>Reinforcement Learning Examples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="reinforcement-learning-examples">
+<h1>Reinforcement Learning Examples<a class="headerlink" href="#reinforcement-learning-examples" title="Permalink to this headline">¶</a></h1>
+<p>All reinforcement learning examples can be launched from <code class="docutils literal notranslate"><span class="pre">python/rlgpu</span></code> with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">train.py</span></code> or <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">rlg_train.py</span></code>, followed by the appropriate task name using command line argument <code class="docutils literal notranslate"><span class="pre">--task</span></code>.</p>
+<p>When training with the viewer (not headless), you can press V to toggle viewer sync.  Disabling viewer sync will improve performance, especially in GPU pipeline mode.  Viewer sync can be re-enabled at any time to check training progress.</p>
+<div class="section" id="common-command-line-options">
+<h2>Common Command Line Options<a class="headerlink" href="#common-command-line-options" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd><span class="option">--help</span></kbd></dt>
+<dd><p>Prints out commandline options</p>
+</dd>
+<dt><kbd><span class="option">--task</span></kbd></dt>
+<dd><p>Select example task to run. Options are: Cartpole, CartpoleYUp, BallBalance, Ant, Humanoid, FrankaCabinet, ShadowHand. Default is <strong>Humanoid</strong></p>
+</dd>
+<dt><kbd><span class="option">--headless</span></kbd></dt>
+<dd><p>Run task without viewer. Default is <strong>False</strong></p>
+</dd>
+<dt><kbd><span class="option">--logdir</span></kbd></dt>
+<dd><p>Directory to place log files for training. Default is <strong>logs/</strong></p>
+</dd>
+<dt><kbd><span class="option">--experiment_name</span></kbd></dt>
+<dd><p>Name to be appended to log files. Default is <strong>Base</strong></p>
+</dd>
+<dt><kbd><span class="option">--device</span></kbd></dt>
+<dd><p>Choose CPU or GPU for running example task and simulation. Default is <strong>GPU</strong></p>
+</dd>
+<dt><kbd><span class="option">--ppo_device</span></kbd></dt>
+<dd><p>Choose CPU or GPU for running PPO training. Default is <strong>GPU</strong></p>
+</dd>
+<dt><kbd><span class="option">--test</span></kbd></dt>
+<dd><p>Test trained policy, will run inference only, no training will be performed</p>
+</dd>
+<dt><kbd><span class="option">--resume</span></kbd></dt>
+<dd><p>Iteration at which training or inference should resume from</p>
+</dd>
+<dt><kbd><span class="option">--seed</span></kbd></dt>
+<dd><p>Set a random seed</p>
+</dd>
+<dt><kbd><span class="option">--max_iterations</span></kbd></dt>
+<dd><p>Overrides maximum number of PPO training iterations from config file</p>
+</dd>
+<dt><kbd><span class="option">--num_envs</span></kbd></dt>
+<dd><p>Overrides number of environments from config file</p>
+</dd>
+<dt><kbd><span class="option">--randomize</span></kbd></dt>
+<dd><p>Enable domain randomization. Default is <strong>False</strong></p>
+</dd>
+<dt><kbd><span class="option">--physx</span></kbd></dt>
+<dd><p>Uses CPU PhysX as the physics backend for simulation</p>
+</dd>
+<dt><kbd><span class="option">--physx_gpu</span></kbd></dt>
+<dd><p>Uses GPU PhysX as the physics backend for simulation</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All examples can be run on CPU or GPU and currently only support PhysX backend.</p>
+</div>
+</div>
+<div class="section" id="list-of-examples">
+<h2>List of Examples<a class="headerlink" href="#list-of-examples" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cartpole-cartpole-py">
+<h3>Cartpole (cartpole.py)<a class="headerlink" href="#cartpole-cartpole-py" title="Permalink to this headline">¶</a></h3>
+<p>This is a classical example of cartpole, training to keep the pole upright.
+It can be launched with command line argument <code class="docutils literal notranslate"><span class="pre">--task</span> <span class="pre">Cartpole</span></code>.</p>
+<img alt="../_images/cartpole.png" src="../_images/cartpole.png" />
+</div>
+<div class="section" id="cartpole-y-up-cartpole-y-up-py">
+<h3>Cartpole Y-Up (cartpole_y_up.py)<a class="headerlink" href="#cartpole-y-up-cartpole-y-up-py" title="Permalink to this headline">¶</a></h3>
+<p>This is the same learning task as the above Cartpole example.
+RL examples use Z-axis as up axis by default, this example demonstrates the use of Y-axis as the up axis.
+It can be launched with command line argument <code class="docutils literal notranslate"><span class="pre">--task</span> <span class="pre">CartpoleYUp</span></code>.</p>
+</div>
+<div class="section" id="ball-balance-ball-balance-py">
+<h3>Ball Balance (ball_balance.py)<a class="headerlink" href="#ball-balance-ball-balance-py" title="Permalink to this headline">¶</a></h3>
+<p>This example trains balancing tables to balance a ball on the table top.
+It can be launched with command line argument <code class="docutils literal notranslate"><span class="pre">--task</span> <span class="pre">BallBalance</span></code>.
+It showcases the use of force and torque sensors, as well as DOF states for the table and root states for the ball.</p>
+<img alt="../_images/rl_ballbalance.png" src="../_images/rl_ballbalance.png" />
+</div>
+<div class="section" id="ant-ant-py">
+<h3>Ant (ant.py)<a class="headerlink" href="#ant-ant-py" title="Permalink to this headline">¶</a></h3>
+<p>This example trains robot ants to run forward.
+It can be launched with command line argument <code class="docutils literal notranslate"><span class="pre">--task</span> <span class="pre">Ant</span></code>.
+Simulation states used for this task include actor root states, DOF states, and force sensors.</p>
+<img alt="../_images/rl_ant.png" src="../_images/rl_ant.png" />
+</div>
+<div class="section" id="humanoid-humanoid-py">
+<h3>Humanoid (humanoid.py)<a class="headerlink" href="#humanoid-humanoid-py" title="Permalink to this headline">¶</a></h3>
+<p>This example trains humanoids to run forward.
+It can be launched with command line argument <code class="docutils literal notranslate"><span class="pre">--task</span> <span class="pre">Humanoid</span></code>.
+Simulation states used for this task include actor root states, DOF states, and force sensors.</p>
+<img alt="../_images/rl_humanoid.png" src="../_images/rl_humanoid.png" />
+</div>
+<div class="section" id="franka-drawer-opening-franka-py">
+<h3>Franka Drawer Opening (franka.py)<a class="headerlink" href="#franka-drawer-opening-franka-py" title="Permalink to this headline">¶</a></h3>
+<p>This example trains Franka arms to open cabinet drawers filled with blocks using their grippers.
+It can be launched with command line argument <code class="docutils literal notranslate"><span class="pre">--task</span> <span class="pre">FrankaCabinet</span></code>.
+It showcases the use of actor root states, DOF states, and rigid body states from simulation.</p>
+<img alt="../_images/rl_franka.png" src="../_images/rl_franka.png" />
+</div>
+<div class="section" id="shadow-hand-object-manipulation-shadow-hand-py">
+<h3>Shadow Hand Object Manipulation (shadow_hand.py)<a class="headerlink" href="#shadow-hand-object-manipulation-shadow-hand-py" title="Permalink to this headline">¶</a></h3>
+<p>This example trains the Shadow Hand robot to manipulate an oject to match the orientation of a target object.
+It resembles OpenAI’s <a class="reference external" href="https://openai.com/blog/learning-dexterity/">Learning Dexterity</a> project and <a class="reference external" href="https://github.com/openai/gym/tree/master/gym/envs/robotics">Robotics Shadow Hand</a> training environments.
+Object to manipulate - block, egg or pen can be set in the task config <code class="docutils literal notranslate"><span class="pre">shadow_hand.yaml</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">objectType</span><span class="p">:</span> <span class="s2">&quot;block&quot;</span> <span class="c1"># can be block, egg or pen</span>
+</pre></div>
+</div>
+<p>In addition different observations variants are supported that can be set from the yaml config <code class="docutils literal notranslate"><span class="pre">shadow_hand.yaml</span></code> as well:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">observationType</span><span class="p">:</span> <span class="s2">&quot;full&quot;</span> <span class="c1"># can be &quot;dof_no_vel&quot;, &quot;dof&quot;, &quot;fingertip&quot;, &quot;full&quot;, &quot;full_force_sensor&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>dof</strong>: a standard set of observations with joint positions and velocities, object pose, linear and angular velocities and the goal pose</p></li>
+<li><p><strong>dof_no_vel</strong>: the same as <code class="docutils literal notranslate"><span class="pre">dof</span></code> but without any velocity information for joints and object</p></li>
+<li><p><strong>fingertip</strong>: similar to <code class="docutils literal notranslate"><span class="pre">dof</span></code>, but instead of joint states, fingertip transforms, linear and angular velocities are provided</p></li>
+<li><p><strong>full</strong>: <code class="docutils literal notranslate"><span class="pre">dof</span></code> set of observations plus fingertip transforms, and their linear and angular velocities</p></li>
+<li><p><strong>full_force_sensor</strong>: <code class="docutils literal notranslate"><span class="pre">full</span></code> set of observations plus readings from force-torque sensors attached to the fingertips</p></li>
+</ul>
+<p>It can be launched with command line argument <code class="docutils literal notranslate"><span class="pre">--task</span> <span class="pre">ShadowHand</span></code>.</p>
+<img alt="../_images/rl_shadowhand.png" src="../_images/rl_shadowhand.png" />
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="assets.html" class="btn btn-neutral float-right" title="Bundled Assets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="simple.html" class="btn btn-neutral float-left" title="Programming Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, NVIDIA Corporation
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

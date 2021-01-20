@@ -1,0 +1,11 @@
+# if given, will override the device setting in gym. 
+env:
+  numEnvs: 256
+  envSpacing: 7.0
+  resetDist: 3.0
+  maxEffort: 400.0
+  
+  # upAxis: "y" # options: y or z. Note: could set this in config if needed
+
+task:
+  randomize: False

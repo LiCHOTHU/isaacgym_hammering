@@ -1,0 +1,130 @@
+Reinforcement Learning Examples
+################################
+
+All reinforcement learning examples can be launched from ``python/rlgpu`` with ``python train.py`` or ``python rlg_train.py``, followed by the appropriate task name using command line argument ``--task``.
+
+When training with the viewer (not headless), you can press V to toggle viewer sync.  Disabling viewer sync will improve performance, especially in GPU pipeline mode.  Viewer sync can be re-enabled at any time to check training progress.
+
+Common Command Line Options
+============================
+
+--help
+    Prints out commandline options
+--task
+    Select example task to run. Options are: Cartpole, CartpoleYUp, BallBalance, Ant, Humanoid, FrankaCabinet, ShadowHand. Default is **Humanoid**
+--headless
+    Run task without viewer. Default is **False**
+--logdir
+    Directory to place log files for training. Default is **logs/**
+--experiment_name
+    Name to be appended to log files. Default is **Base**
+--device
+    Choose CPU or GPU for running example task and simulation. Default is **GPU**
+--ppo_device
+    Choose CPU or GPU for running PPO training. Default is **GPU**
+--test
+    Test trained policy, will run inference only, no training will be performed
+--resume
+    Iteration at which training or inference should resume from
+--seed
+    Set a random seed
+--max_iterations
+    Overrides maximum number of PPO training iterations from config file
+--num_envs
+    Overrides number of environments from config file
+--randomize
+    Enable domain randomization. Default is **False**
+--physx
+    Uses CPU PhysX as the physics backend for simulation
+--physx_gpu
+    Uses GPU PhysX as the physics backend for simulation
+
+
+.. note::
+    All examples can be run on CPU or GPU and currently only support PhysX backend.
+
+
+List of Examples
+=================
+
+.. cartpole.py:
+
+Cartpole (cartpole.py)
+----------------------
+This is a classical example of cartpole, training to keep the pole upright.
+It can be launched with command line argument ``--task Cartpole``.
+
+.. image:: ../images/cartpole.png
+
+.. cartpole_y_up.py
+
+Cartpole Y-Up (cartpole_y_up.py)
+--------------------------------
+This is the same learning task as the above Cartpole example.
+RL examples use Z-axis as up axis by default, this example demonstrates the use of Y-axis as the up axis.
+It can be launched with command line argument ``--task CartpoleYUp``.
+
+.. ball_balance.py:
+
+Ball Balance (ball_balance.py)
+------------------------------
+This example trains balancing tables to balance a ball on the table top.
+It can be launched with command line argument ``--task BallBalance``.
+It showcases the use of force and torque sensors, as well as DOF states for the table and root states for the ball.
+
+.. image:: ../images/rl_ballbalance.png
+
+.. ant.py:
+
+Ant (ant.py)
+------------
+This example trains robot ants to run forward. 
+It can be launched with command line argument ``--task Ant``.
+Simulation states used for this task include actor root states, DOF states, and force sensors.
+
+.. image:: ../images/rl_ant.png
+
+.. humanoid.py
+
+Humanoid (humanoid.py)
+----------------------
+This example trains humanoids to run forward. 
+It can be launched with command line argument ``--task Humanoid``.
+Simulation states used for this task include actor root states, DOF states, and force sensors.
+
+.. image:: ../images/rl_humanoid.png
+
+.. franka.py:
+
+Franka Drawer Opening (franka.py)
+---------------------------------
+This example trains Franka arms to open cabinet drawers filled with blocks using their grippers.
+It can be launched with command line argument ``--task FrankaCabinet``.
+It showcases the use of actor root states, DOF states, and rigid body states from simulation.
+
+.. image:: ../images/rl_franka.png
+
+.. shadow_hand.py
+
+Shadow Hand Object Manipulation (shadow_hand.py)
+------------------------------------------------
+This example trains the Shadow Hand robot to manipulate an oject to match the orientation of a target object. 
+It resembles OpenAI's `Learning Dexterity <https://openai.com/blog/learning-dexterity/>`_ project and `Robotics Shadow Hand <https://github.com/openai/gym/tree/master/gym/envs/robotics>`_ training environments.
+Object to manipulate - block, egg or pen can be set in the task config ``shadow_hand.yaml``::
+
+    objectType: "block" # can be block, egg or pen
+
+In addition different observations variants are supported that can be set from the yaml config ``shadow_hand.yaml`` as well::
+
+    observationType: "full" # can be "dof_no_vel", "dof", "fingertip", "full", "full_force_sensor"
+
+- **dof**: a standard set of observations with joint positions and velocities, object pose, linear and angular velocities and the goal pose
+- **dof_no_vel**: the same as ``dof`` but without any velocity information for joints and object 
+- **fingertip**: similar to ``dof``, but instead of joint states, fingertip transforms, linear and angular velocities are provided
+- **full**: ``dof`` set of observations plus fingertip transforms, and their linear and angular velocities
+- **full_force_sensor**: ``full`` set of observations plus readings from force-torque sensors attached to the fingertips
+
+It can be launched with command line argument ``--task ShadowHand``. 
+
+
+.. image:: ../images/rl_shadowhand.png

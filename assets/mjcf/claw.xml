@@ -1,0 +1,39 @@
+<mujoco model="claw">
+  <compiler angle="degree" coordinate="local" inertiafromgeom="true"/>
+  <option integrator="RK4" timestep="0.01"/>
+  <default>
+    <joint damping="0" limited="true"/>
+    <geom conaffinity="1" condim="3" friction="1.5 0.1 0.1" margin="0.01" rgba="0.14 0.2 0.7 1.0"/>
+  </default>
+  <worldbody>
+    <body name="base" pos="0 0 0">
+      <joint name='root' type='free' pos='0 0 0' limited='false' damping='0' armature='0' stiffness='0'/>
+      <geom pos="0 0 0" size="0.6 0.01 0.6" type="box"/>
+        <body name="upper_arm" pos="0 -0.21 0">
+          <joint axis="1 0 0" name="arm_x" pos="0.0 0.0 0.0" range="-0.54 0.54" type="slide"/>
+          <joint axis="0 0 1" name="arm_z" pos="0.0 0.0 0.0" range="-0.54 0.54" type="slide"/>
+          <geom pos="0 0 0" size="0.06 0.2 0.06" type="box"/>
+          <body name="lower_arm" pos="0 -0.02 0">
+            <joint axis="0 1 0" name="arm_lift1" pos="0.0 0.0 0.0" range="-0.38 0" type="slide"/>
+            <geom pos="0 0 0" size="0.04 0.2 0.04" type="box"/>
+            <body name="lower_lower_arm" pos="0 -0.02 0">
+              <joint axis="0 1 0" name="arm_lift2" pos="0.0 0.0 0.0" range="-0.38 0" type="slide"/>
+              <geom pos="0 0 0" size="0.025 0.2 0.025" type="box"/>
+              <body name="hand" pos="0 -0.22 0">
+                <joint axis="0 1 0" name="arm_rot" pos="0.0 0.0 0.0" range="-180 180" type="hinge"/>
+                <geom pos="0 0 0" size="0.2 0.02 0.05" type="box"/>
+                <body name="finger1" pos="-0.18 -0.12 0">
+                  <joint axis="1 0 0" name="finger1_slide" pos="0.0 0.0 0.0" range="0 0.16" type="slide"/>
+                  <geom pos="0 0 0" size="0.02 0.1 0.04" type="box"/>
+                </body>
+                <body name="finger2" pos="0.18 -0.12 0">
+                  <joint axis="1 0 0" name="finger2_slide" pos="0.0 0.0 0.0" range="-0.16 0" type="slide"/>
+                  <geom pos="0 0 0" size="0.02 0.1 0.04" type="box"/>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+    </body>
+  </worldbody>
+</mujoco>

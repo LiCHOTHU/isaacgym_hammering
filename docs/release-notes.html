@@ -1,0 +1,308 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Release Notes &mdash; Isaac Gym  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/isaac_custom.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples/index.html" />
+    <link rel="prev" title="Installation" href="install.html" />
+    <link href="_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Isaac Gym
+          
+
+          
+            
+            <img src="_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Guide:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about_gym.html">About Isaac Gym</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#preview1">1.0.preview1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#new-features">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#removed-features">Removed Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#changes">Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bug-fixes">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#known-issues-and-limitations">Known Issues and Limitations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rl/index.html">Reinforcement Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faqs.html">Frequently Asked Questions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Isaac Gym</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Release Notes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="release-notes">
+<h1>Release Notes<a class="headerlink" href="#release-notes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="preview1">
+<h2>1.0.preview1<a class="headerlink" href="#preview1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="new-features">
+<h3>New Features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Implemented end-to-end GPU pipeline for physics simulation, which allows interacting with simulations on the GPU without copying data to or from the host.</p></li>
+<li><p>Added new Tensor API for physics state and control, on both CPU and GPU.</p></li>
+<li><p>Added Pytorch interop utilities for the Tensor API.</p></li>
+<li><p>Added a new simple framework for reinforcement learning and a collection of sample tasks.</p></li>
+<li><p>Added new configurable domain randomization features.</p></li>
+<li><p>Added support for fixed and spatial tendons with PhysX.</p></li>
+<li><p>Added support for user-defined force sensors attached to articulation links with PhysX.</p></li>
+<li><p>Exposed DOF forces in PhysX.</p></li>
+<li><p>Added Jacobian and generalized mass matrices with PhysX.</p></li>
+<li><p>Improved PVD support - can connect to PVD remotely or log to file.</p></li>
+<li><p>Improved contact handling with multiple substeps.</p></li>
+<li><p>Added support for multiple subscenes to parallelize computations with CPU PhysX.</p></li>
+<li><p>Improved contact handling performance in PhysX.</p></li>
+<li><p>Support for rigid dynamic actors in PhysX to increase performance with single-body actors.</p></li>
+<li><p>Support for custom aggregates with PhysX.</p></li>
+<li><p>Exposed joint armature and joint friction in PhysX.</p></li>
+<li><p>Added support for soft contacts with Flex.</p></li>
+<li><p>Added stress tensors with Flex.</p></li>
+<li><p>Added pneumatic pressure/target tensors with Flex.</p></li>
+<li><p>Added soft materials with Flex.</p></li>
+<li><p>Added new simulation and asset/actor options for Flex and PhysX.</p></li>
+<li><p>Parsing tendon definitions from MJCF.</p></li>
+<li><p>Loading cylinder geometry from MJCF.</p></li>
+<li><p>Loading visual meshes from MJCF.</p></li>
+<li><p>Generating filters from contact specification in MJCF.</p></li>
+<li><p>Improved support for multiple sensor cameras per env.</p></li>
+<li><p>Improved Z-up simulation support.</p></li>
+<li><p>Updated PhysX and FleX versions.</p></li>
+<li><p>Viewer sync can be toggled by pressing V (disabling sync increases performance, especially with the GPU pipeline).</p></li>
+<li><p>Improved setup scripts.</p></li>
+<li><p>Updated documentation and examples.</p></li>
+<li><p>Updated docker images.</p></li>
+</ul>
+</div>
+<div class="section" id="removed-features">
+<h3>Removed Features<a class="headerlink" href="#removed-features" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Removed Python multiprocessing support, which is superseded by the new Tensor API.</p></li>
+<li><p>Removed old <code class="docutils literal notranslate"><span class="pre">rlbase</span></code> module and examples, which are replaced by the new RL framework designed around the Tensor API.</p></li>
+<li><p>Removed old RTX renderer.</p></li>
+</ul>
+</div>
+<div class="section" id="changes">
+<h3>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Renamed package from <code class="docutils literal notranslate"><span class="pre">carbongym</span></code> to <code class="docutils literal notranslate"><span class="pre">isaacgym</span></code>.</p></li>
+<li><p>Improved quaternion-Euler conversion utilities.</p></li>
+</ul>
+</div>
+<div class="section" id="bug-fixes">
+<h3>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Numerous physics bug fixes and simulation stability improvements.</p></li>
+<li><p>Fixes and improvements to URDF and MJCF importers.</p></li>
+<li><p>Fixes and improvements to camera sensors.</p></li>
+</ul>
+</div>
+<div class="section" id="known-issues-and-limitations">
+<h3>Known Issues and Limitations<a class="headerlink" href="#known-issues-and-limitations" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Most of the rigid body tensor API is only available with PhysX.</p></li>
+<li><p>Soft body support is currently only available with FleX.</p></li>
+<li><p>Missing tensor API for setting all rigid body states: root and DOF state tensors can be used instead.</p></li>
+<li><p>Missing API for configuring properties of spatial tendons.</p></li>
+<li><p>URDF importer still doesn’t support loading STL and DAE meshes, only OBJ.</p></li>
+<li><p>When using the GPU pipeline, DOF states don’t refresh in the viewer.</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examples/index.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, NVIDIA Corporation
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

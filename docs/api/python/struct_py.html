@@ -1,0 +1,1522 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Python Structures &mdash; Isaac Gym  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/isaac_custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Python Enums" href="enum_py.html" />
+    <link rel="prev" title="Python Gym API" href="gym_py.html" />
+    <link href="../../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> Isaac Gym
+          
+
+          
+            
+            <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">User Guide:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../about_gym.html">About Isaac Gym</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../programming/index.html">Programming</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../programming/simsetup.html">Simulation Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/assets.html">Assets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/physics.html">Physics Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/tensors.html">Tensor API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/forcesensors.html">Force Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/tuning.html">Simulation Tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/math.html">Math Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../programming/graphics.html">Graphics and Camera Sensors</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">API Reference</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Python API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="gym_py.html">Python Gym API</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Python Structures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="enum_py.html">Python Enums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="const_py.html">Python Constants</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../rl/index.html">Reinforcement Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faqs.html">Frequently Asked Questions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Isaac Gym</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../programming/index.html">Programming</a> &raquo;</li>
+        
+          <li><a href="../index.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="index.html">Python API</a> &raquo;</li>
+        
+      <li>Python Structures</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="python-structures">
+<h1>Python Structures<a class="headerlink" href="#python-structures" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="isaacgym.gymapi.Version">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">Version</code><a class="headerlink" href="#isaacgym.gymapi.Version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a major and minor version</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.Version.major">
+<em class="property">property </em><code class="sig-name descname">major</code><a class="headerlink" href="#isaacgym.gymapi.Version.major" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Version.minor">
+<em class="property">property </em><code class="sig-name descname">minor</code><a class="headerlink" href="#isaacgym.gymapi.Version.minor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.Vec3">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">Vec3</code><a class="headerlink" href="#isaacgym.gymapi.Vec3" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="isaacgym.gymapi.Vec3.cross">
+<code class="sig-name descname">cross</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a></span></em>, <em class="sig-param"><span class="n">arg0</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a><a class="headerlink" href="#isaacgym.gymapi.Vec3.cross" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Vec3.dot">
+<code class="sig-name descname">dot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a></span></em>, <em class="sig-param"><span class="n">arg0</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a></span></em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#isaacgym.gymapi.Vec3.dot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="isaacgym.gymapi.Vec3.dtype">
+<code class="sig-name descname">dtype</code><em class="property"> = dtype([('x', '&lt;f4'), ('y', '&lt;f4'), ('z', '&lt;f4')])</em><a class="headerlink" href="#isaacgym.gymapi.Vec3.dtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Vec3.from_buffer">
+<em class="property">static </em><code class="sig-name descname">from_buffer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arg0</span><span class="p">:</span> <span class="n">buffer</span></em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#isaacgym.gymapi.Vec3.from_buffer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Vec3.length">
+<code class="sig-name descname">length</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a></span></em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#isaacgym.gymapi.Vec3.length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Vec3.length_sq">
+<code class="sig-name descname">length_sq</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a></span></em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#isaacgym.gymapi.Vec3.length_sq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Vec3.normalize">
+<code class="sig-name descname">normalize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a><a class="headerlink" href="#isaacgym.gymapi.Vec3.normalize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Vec3.x">
+<em class="property">property </em><code class="sig-name descname">x</code><a class="headerlink" href="#isaacgym.gymapi.Vec3.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Vec3.y">
+<em class="property">property </em><code class="sig-name descname">y</code><a class="headerlink" href="#isaacgym.gymapi.Vec3.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Vec3.z">
+<em class="property">property </em><code class="sig-name descname">z</code><a class="headerlink" href="#isaacgym.gymapi.Vec3.z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.Quat">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">Quat</code><a class="headerlink" href="#isaacgym.gymapi.Quat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quaternion representation in Gym</p>
+<dl class="py attribute">
+<dt id="isaacgym.gymapi.Quat.dtype">
+<code class="sig-name descname">dtype</code><em class="property"> = dtype([('x', '&lt;f4'), ('y', '&lt;f4'), ('z', '&lt;f4'), ('w', '&lt;f4')])</em><a class="headerlink" href="#isaacgym.gymapi.Quat.dtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Quat.from_axis_angle">
+<em class="property">static </em><code class="sig-name descname">from_axis_angle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arg0</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a></span></em>, <em class="sig-param"><span class="n">arg1</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#isaacgym.gymapi.Quat" title="isaacgym.gymapi.Quat">Quat</a><a class="headerlink" href="#isaacgym.gymapi.Quat.from_axis_angle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Quat.from_buffer">
+<em class="property">static </em><code class="sig-name descname">from_buffer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arg0</span><span class="p">:</span> <span class="n">buffer</span></em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#isaacgym.gymapi.Quat.from_buffer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Quat.from_euler_zyx">
+<em class="property">static </em><code class="sig-name descname">from_euler_zyx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arg0</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">arg1</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">arg2</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#isaacgym.gymapi.Quat" title="isaacgym.gymapi.Quat">Quat</a><a class="headerlink" href="#isaacgym.gymapi.Quat.from_euler_zyx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Quat.inverse">
+<code class="sig-name descname">inverse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Quat" title="isaacgym.gymapi.Quat">Quat</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#isaacgym.gymapi.Quat" title="isaacgym.gymapi.Quat">Quat</a><a class="headerlink" href="#isaacgym.gymapi.Quat.inverse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Quat.normalize">
+<code class="sig-name descname">normalize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Quat" title="isaacgym.gymapi.Quat">Quat</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#isaacgym.gymapi.Quat" title="isaacgym.gymapi.Quat">Quat</a><a class="headerlink" href="#isaacgym.gymapi.Quat.normalize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Quat.rotate">
+<code class="sig-name descname">rotate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Quat" title="isaacgym.gymapi.Quat">Quat</a></span></em>, <em class="sig-param"><span class="n">arg0</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a><a class="headerlink" href="#isaacgym.gymapi.Quat.rotate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Quat.to_euler_zyx">
+<code class="sig-name descname">to_euler_zyx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Quat" title="isaacgym.gymapi.Quat">Quat</a></span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">, </span>float<span class="p">]</span><a class="headerlink" href="#isaacgym.gymapi.Quat.to_euler_zyx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Quat.w">
+<em class="property">property </em><code class="sig-name descname">w</code><a class="headerlink" href="#isaacgym.gymapi.Quat.w" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Quat.x">
+<em class="property">property </em><code class="sig-name descname">x</code><a class="headerlink" href="#isaacgym.gymapi.Quat.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Quat.y">
+<em class="property">property </em><code class="sig-name descname">y</code><a class="headerlink" href="#isaacgym.gymapi.Quat.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Quat.z">
+<em class="property">property </em><code class="sig-name descname">z</code><a class="headerlink" href="#isaacgym.gymapi.Quat.z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.Transform">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">Transform</code><a class="headerlink" href="#isaacgym.gymapi.Transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a transform in the system</p>
+<dl class="py attribute">
+<dt id="isaacgym.gymapi.Transform.dtype">
+<code class="sig-name descname">dtype</code><em class="property"> = dtype([('p', [('x', '&lt;f4'), ('y', '&lt;f4'), ('z', '&lt;f4')]), ('r', [('x', '&lt;f4'), ('y', '&lt;f4'), ('z', '&lt;f4'), ('w', '&lt;f4')])])</em><a class="headerlink" href="#isaacgym.gymapi.Transform.dtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Transform.from_buffer">
+<em class="property">static </em><code class="sig-name descname">from_buffer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arg0</span><span class="p">:</span> <span class="n">buffer</span></em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#isaacgym.gymapi.Transform.from_buffer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Transform.inverse">
+<code class="sig-name descname">inverse</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Transform" title="isaacgym.gymapi.Transform">Transform</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#isaacgym.gymapi.Transform" title="isaacgym.gymapi.Transform">Transform</a><a class="headerlink" href="#isaacgym.gymapi.Transform.inverse" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the inverse of this transform.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#isaacgym.gymapi.Transform" title="isaacgym.gymapi.Transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isaacgym.gymapi.Transform</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Transform.p">
+<em class="property">property </em><code class="sig-name descname">p</code><a class="headerlink" href="#isaacgym.gymapi.Transform.p" title="Permalink to this definition">¶</a></dt>
+<dd><p>Position, in meters</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Transform.r">
+<em class="property">property </em><code class="sig-name descname">r</code><a class="headerlink" href="#isaacgym.gymapi.Transform.r" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotation Quaternion, represented in the format <span class="math notranslate nohighlight">\(x\hat{i} + y\hat{j} + z\hat{k} + w\)</span></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Transform.transform_point">
+<code class="sig-name descname">transform_point</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Transform" title="isaacgym.gymapi.Transform">Transform</a></span></em>, <em class="sig-param"><span class="n">arg0</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a><a class="headerlink" href="#isaacgym.gymapi.Transform.transform_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotates point by transform quatertnion and adds transform offset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>param1</strong> (<a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isaacgym.gymapi.Vec3</span></code></a>) – Point to transform.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The transformed point.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isaacgym.gymapi.Vec3</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Transform.transform_points">
+<code class="sig-name descname">transform_points</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Transform" title="isaacgym.gymapi.Transform">Transform</a></span></em>, <em class="sig-param"><span class="n">arg0</span><span class="p">:</span> <span class="n">numpy.ndarray<span class="p">[</span><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<span class="p">[</span><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a><span class="p">]</span><a class="headerlink" href="#isaacgym.gymapi.Transform.transform_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotates points by transform quatertnion and adds transform offset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>param1</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> of <a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isaacgym.gymapi.Vec3</span></code></a>) – Points to transform.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The transformed points.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray[<a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isaacgym.gymapi.Vec3</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Transform.transform_vector">
+<code class="sig-name descname">transform_vector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Transform" title="isaacgym.gymapi.Transform">Transform</a></span></em>, <em class="sig-param"><span class="n">arg0</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a></span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a><a class="headerlink" href="#isaacgym.gymapi.Transform.transform_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotates vector by transform quatertnion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>param1</strong> (<a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isaacgym.gymapi.Vec3</span></code></a>) – Vector to transform.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The transformed vector.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isaacgym.gymapi.Vec3</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Transform.transform_vectors">
+<code class="sig-name descname">transform_vectors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#isaacgym.gymapi.Transform" title="isaacgym.gymapi.Transform">Transform</a></span></em>, <em class="sig-param"><span class="n">arg0</span><span class="p">:</span> <span class="n">numpy.ndarray<span class="p">[</span><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<span class="p">[</span><a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3">Vec3</a><span class="p">]</span><a class="headerlink" href="#isaacgym.gymapi.Transform.transform_vectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotates vectors by transform quatertnion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>param1</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> of <a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isaacgym.gymapi.Vec3</span></code></a>) – Vectors to transform.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The transformed vectors.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray[<a class="reference internal" href="#isaacgym.gymapi.Vec3" title="isaacgym.gymapi.Vec3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isaacgym.gymapi.Vec3</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.RigidBodyState">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">RigidBodyState</code><a class="headerlink" href="#isaacgym.gymapi.RigidBodyState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Containing states to get/set for a rigid body in the simulation</p>
+<dl class="py attribute">
+<dt id="isaacgym.gymapi.RigidBodyState.dtype">
+<code class="sig-name descname">dtype</code><em class="property"> = dtype([('pose', [('p', [('x', '&lt;f4'), ('y', '&lt;f4'), ('z', '&lt;f4')]), ('r', [('x', '&lt;f4'), ('y', '&lt;f4'), ('z', '&lt;f4'), ('w', '&lt;f4')])]), ('vel', [('linear', [('x', '&lt;f4'), ('y', '&lt;f4'), ('z', '&lt;f4')]), ('angular', [('x', '&lt;f4'), ('y', '&lt;f4'), ('z', '&lt;f4')])])])</em><a class="headerlink" href="#isaacgym.gymapi.RigidBodyState.dtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidBodyState.pose">
+<em class="property">property </em><code class="sig-name descname">pose</code><a class="headerlink" href="#isaacgym.gymapi.RigidBodyState.pose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform with position and orientation of rigid body</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidBodyState.vel">
+<em class="property">property </em><code class="sig-name descname">vel</code><a class="headerlink" href="#isaacgym.gymapi.RigidBodyState.vel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set of angular and linear velocities of rigid body</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.DofState">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">DofState</code><a class="headerlink" href="#isaacgym.gymapi.DofState" title="Permalink to this definition">¶</a></dt>
+<dd><p>States of a Degree of Freedom in the Asset architecture</p>
+<dl class="py attribute">
+<dt id="isaacgym.gymapi.DofState.dtype">
+<code class="sig-name descname">dtype</code><em class="property"> = dtype([('pos', '&lt;f4'), ('vel', '&lt;f4')])</em><a class="headerlink" href="#isaacgym.gymapi.DofState.dtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.DofState.pos">
+<em class="property">property </em><code class="sig-name descname">pos</code><a class="headerlink" href="#isaacgym.gymapi.DofState.pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>DOF position, in radians if it’s a revolute DOF, or meters, if it’s a prismatic DOF</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.DofState.vel">
+<em class="property">property </em><code class="sig-name descname">vel</code><a class="headerlink" href="#isaacgym.gymapi.DofState.vel" title="Permalink to this definition">¶</a></dt>
+<dd><p>DOF velocity, in radians/s if it’s a revolute DOF, or m/s, if it’s a prismatic DOF</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.DofFrame">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">DofFrame</code><a class="headerlink" href="#isaacgym.gymapi.DofFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Frame of a Degree of Freedom</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.DofFrame.axis">
+<em class="property">property </em><code class="sig-name descname">axis</code><a class="headerlink" href="#isaacgym.gymapi.DofFrame.axis" title="Permalink to this definition">¶</a></dt>
+<dd><p>direction for the DOF action</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="isaacgym.gymapi.DofFrame.dtype">
+<code class="sig-name descname">dtype</code><em class="property"> = dtype([('origin', [('x', '&lt;f4'), ('y', '&lt;f4'), ('z', '&lt;f4')]), ('axis', [('x', '&lt;f4'), ('y', '&lt;f4'), ('z', '&lt;f4')])])</em><a class="headerlink" href="#isaacgym.gymapi.DofFrame.dtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.DofFrame.from_buffer">
+<em class="property">static </em><code class="sig-name descname">from_buffer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arg0</span><span class="p">:</span> <span class="n">buffer</span></em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#isaacgym.gymapi.DofFrame.from_buffer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.DofFrame.origin">
+<em class="property">property </em><code class="sig-name descname">origin</code><a class="headerlink" href="#isaacgym.gymapi.DofFrame.origin" title="Permalink to this definition">¶</a></dt>
+<dd><p>position in environment for the DOF</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.Velocity">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">Velocity</code><a class="headerlink" href="#isaacgym.gymapi.Velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Holds linear and angular velocities, in $m/s$ and $radians/s$</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.Velocity.angular">
+<em class="property">property </em><code class="sig-name descname">angular</code><a class="headerlink" href="#isaacgym.gymapi.Velocity.angular" title="Permalink to this definition">¶</a></dt>
+<dd><p>angular velocity component</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="isaacgym.gymapi.Velocity.dtype">
+<code class="sig-name descname">dtype</code><em class="property"> = dtype([('linear', [('x', '&lt;f4'), ('y', '&lt;f4'), ('z', '&lt;f4')]), ('angular', [('x', '&lt;f4'), ('y', '&lt;f4'), ('z', '&lt;f4')])])</em><a class="headerlink" href="#isaacgym.gymapi.Velocity.dtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Velocity.from_buffer">
+<em class="property">static </em><code class="sig-name descname">from_buffer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arg0</span><span class="p">:</span> <span class="n">buffer</span></em><span class="sig-paren">)</span> &#x2192; object<a class="headerlink" href="#isaacgym.gymapi.Velocity.from_buffer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Velocity.linear">
+<em class="property">property </em><code class="sig-name descname">linear</code><a class="headerlink" href="#isaacgym.gymapi.Velocity.linear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Linear velocity component</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.Mat33">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">Mat33</code><a class="headerlink" href="#isaacgym.gymapi.Mat33" title="Permalink to this definition">¶</a></dt>
+<dd><p>3x3 Matrix used for inetia tensor</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.Mat33.x">
+<em class="property">property </em><code class="sig-name descname">x</code><a class="headerlink" href="#isaacgym.gymapi.Mat33.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Mat33.y">
+<em class="property">property </em><code class="sig-name descname">y</code><a class="headerlink" href="#isaacgym.gymapi.Mat33.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Mat33.z">
+<em class="property">property </em><code class="sig-name descname">z</code><a class="headerlink" href="#isaacgym.gymapi.Mat33.z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.Mat44">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">Mat44</code><a class="headerlink" href="#isaacgym.gymapi.Mat44" title="Permalink to this definition">¶</a></dt>
+<dd><p>4x4 Matrix</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.Mat44.w">
+<em class="property">property </em><code class="sig-name descname">w</code><a class="headerlink" href="#isaacgym.gymapi.Mat44.w" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Mat44.x">
+<em class="property">property </em><code class="sig-name descname">x</code><a class="headerlink" href="#isaacgym.gymapi.Mat44.x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Mat44.y">
+<em class="property">property </em><code class="sig-name descname">y</code><a class="headerlink" href="#isaacgym.gymapi.Mat44.y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.Mat44.z">
+<em class="property">property </em><code class="sig-name descname">z</code><a class="headerlink" href="#isaacgym.gymapi.Mat44.z" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.IndexRange">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">IndexRange</code><a class="headerlink" href="#isaacgym.gymapi.IndexRange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for passing start and end indexes of a vector when setting or getting data of a slice of the vector.</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.IndexRange.count">
+<em class="property">property </em><code class="sig-name descname">count</code><a class="headerlink" href="#isaacgym.gymapi.IndexRange.count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.IndexRange.start">
+<em class="property">property </em><code class="sig-name descname">start</code><a class="headerlink" href="#isaacgym.gymapi.IndexRange.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.RigidBodyProperties">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">RigidBodyProperties</code><a class="headerlink" href="#isaacgym.gymapi.RigidBodyProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set of properties used for rigid bodies.</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidBodyProperties.com">
+<em class="property">property </em><code class="sig-name descname">com</code><a class="headerlink" href="#isaacgym.gymapi.RigidBodyProperties.com" title="Permalink to this definition">¶</a></dt>
+<dd><p>center of mass in body space</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidBodyProperties.flags">
+<em class="property">property </em><code class="sig-name descname">flags</code><a class="headerlink" href="#isaacgym.gymapi.RigidBodyProperties.flags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flags to enable certain behaivors on Rigid Bodies simulation. See <code class="xref py py-obj docutils literal notranslate"><span class="pre">isaacgym.gymapi.BodyFlags</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidBodyProperties.inertia">
+<em class="property">property </em><code class="sig-name descname">inertia</code><a class="headerlink" href="#isaacgym.gymapi.RigidBodyProperties.inertia" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inertia tensor relative to the center of mass.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidBodyProperties.invInertia">
+<em class="property">property </em><code class="sig-name descname">invInertia</code><a class="headerlink" href="#isaacgym.gymapi.RigidBodyProperties.invInertia" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverse of Inertia tensor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidBodyProperties.invMass">
+<em class="property">property </em><code class="sig-name descname">invMass</code><a class="headerlink" href="#isaacgym.gymapi.RigidBodyProperties.invMass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverse of mass value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidBodyProperties.mass">
+<em class="property">property </em><code class="sig-name descname">mass</code><a class="headerlink" href="#isaacgym.gymapi.RigidBodyProperties.mass" title="Permalink to this definition">¶</a></dt>
+<dd><p>mass value, in kg</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.PlaneParams">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">PlaneParams</code><a class="headerlink" href="#isaacgym.gymapi.PlaneParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameters for global ground plane</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.PlaneParams.distance">
+<em class="property">property </em><code class="sig-name descname">distance</code><a class="headerlink" href="#isaacgym.gymapi.PlaneParams.distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ground plane distance from origin</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PlaneParams.dynamic_friction">
+<em class="property">property </em><code class="sig-name descname">dynamic_friction</code><a class="headerlink" href="#isaacgym.gymapi.PlaneParams.dynamic_friction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coefficient of dynamic friction</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PlaneParams.normal">
+<em class="property">property </em><code class="sig-name descname">normal</code><a class="headerlink" href="#isaacgym.gymapi.PlaneParams.normal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ground plane normal coefficient</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PlaneParams.restitution">
+<em class="property">property </em><code class="sig-name descname">restitution</code><a class="headerlink" href="#isaacgym.gymapi.PlaneParams.restitution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coefficient of restitution</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PlaneParams.segmentation_id">
+<em class="property">property </em><code class="sig-name descname">segmentation_id</code><a class="headerlink" href="#isaacgym.gymapi.PlaneParams.segmentation_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>SegmentationID value for segmentation ground truth</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PlaneParams.static_friction">
+<em class="property">property </em><code class="sig-name descname">static_friction</code><a class="headerlink" href="#isaacgym.gymapi.PlaneParams.static_friction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coefficient of static friction</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.AttractorProperties">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">AttractorProperties</code><a class="headerlink" href="#isaacgym.gymapi.AttractorProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Attractor is used to pull a rigid body towards a pose. Each pose axis can be individually selected.</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.AttractorProperties.axes">
+<em class="property">property </em><code class="sig-name descname">axes</code><a class="headerlink" href="#isaacgym.gymapi.AttractorProperties.axes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Axes to set the attractor, using GymTransformAxesFlags. Multiple axes can be selected using bitwise combination of each axis flag. if axis flag is set to zero, the attractor will be disabled and won’t impact in solver computational complexity.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AttractorProperties.damping">
+<em class="property">property </em><code class="sig-name descname">damping</code><a class="headerlink" href="#isaacgym.gymapi.AttractorProperties.damping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Damping to be used on attraction solver.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AttractorProperties.offset">
+<em class="property">property </em><code class="sig-name descname">offset</code><a class="headerlink" href="#isaacgym.gymapi.AttractorProperties.offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Offset from rigid body origin to set the attractor pose.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AttractorProperties.rigid_handle">
+<em class="property">property </em><code class="sig-name descname">rigid_handle</code><a class="headerlink" href="#isaacgym.gymapi.AttractorProperties.rigid_handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle to the rigid body to set the attractor to</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AttractorProperties.stiffness">
+<em class="property">property </em><code class="sig-name descname">stiffness</code><a class="headerlink" href="#isaacgym.gymapi.AttractorProperties.stiffness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stiffness to be used on attraction for solver. Stiffness value should be larger than the largest agent kinematic chain stifness</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AttractorProperties.target">
+<em class="property">property </em><code class="sig-name descname">target</code><a class="headerlink" href="#isaacgym.gymapi.AttractorProperties.target" title="Permalink to this definition">¶</a></dt>
+<dd><p>Target pose to attract to.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.RigidShapeProperties">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">RigidShapeProperties</code><a class="headerlink" href="#isaacgym.gymapi.RigidShapeProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set of properties used for all rigid shapes.</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidShapeProperties.compliance">
+<em class="property">property </em><code class="sig-name descname">compliance</code><a class="headerlink" href="#isaacgym.gymapi.RigidShapeProperties.compliance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coefficient of compliance. Determines how compliant the shape is. The smaller the value, the stronger the material will hold its shape. Value should be greater or equal to zero.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidShapeProperties.filter">
+<em class="property">property </em><code class="sig-name descname">filter</code><a class="headerlink" href="#isaacgym.gymapi.RigidShapeProperties.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collision filter bitmask - shapes A and B only collide if (filterA &amp; filterB) == 0.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidShapeProperties.friction">
+<em class="property">property </em><code class="sig-name descname">friction</code><a class="headerlink" href="#isaacgym.gymapi.RigidShapeProperties.friction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coefficient of static friction. Value should be equal or greater than zero.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidShapeProperties.restitution">
+<em class="property">property </em><code class="sig-name descname">restitution</code><a class="headerlink" href="#isaacgym.gymapi.RigidShapeProperties.restitution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coefficient of restitution. It’s the ratio of the final to initial velocity after the rigid body collides. Range [0,1]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidShapeProperties.rolling_friction">
+<em class="property">property </em><code class="sig-name descname">rolling_friction</code><a class="headerlink" href="#isaacgym.gymapi.RigidShapeProperties.rolling_friction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coefficient of rolling friction.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidShapeProperties.thickness">
+<em class="property">property </em><code class="sig-name descname">thickness</code><a class="headerlink" href="#isaacgym.gymapi.RigidShapeProperties.thickness" title="Permalink to this definition">¶</a></dt>
+<dd><p>How far objects should come to rest from the surface of this body</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidShapeProperties.torsion_friction">
+<em class="property">property </em><code class="sig-name descname">torsion_friction</code><a class="headerlink" href="#isaacgym.gymapi.RigidShapeProperties.torsion_friction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coefficient of torsion friction.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.SoftMaterial">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">SoftMaterial</code><a class="headerlink" href="#isaacgym.gymapi.SoftMaterial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Soft Material definition</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.SoftMaterial.activation">
+<em class="property">property </em><code class="sig-name descname">activation</code><a class="headerlink" href="#isaacgym.gymapi.SoftMaterial.activation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Current fiber activation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SoftMaterial.activationMax">
+<em class="property">property </em><code class="sig-name descname">activationMax</code><a class="headerlink" href="#isaacgym.gymapi.SoftMaterial.activationMax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum activation value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SoftMaterial.damping">
+<em class="property">property </em><code class="sig-name descname">damping</code><a class="headerlink" href="#isaacgym.gymapi.SoftMaterial.damping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Material damping.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SoftMaterial.model">
+<em class="property">property </em><code class="sig-name descname">model</code><a class="headerlink" href="#isaacgym.gymapi.SoftMaterial.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model type, See <a class="reference internal" href="enum_py.html#isaacgym.gymapi.SoftMaterialType" title="isaacgym.gymapi.SoftMaterialType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isaacgym.gymapi.SoftMaterialType</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SoftMaterial.poissons">
+<em class="property">property </em><code class="sig-name descname">poissons</code><a class="headerlink" href="#isaacgym.gymapi.SoftMaterial.poissons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Poisson Ration.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SoftMaterial.youngs">
+<em class="property">property </em><code class="sig-name descname">youngs</code><a class="headerlink" href="#isaacgym.gymapi.SoftMaterial.youngs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Young Modulus.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.RigidContact">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">RigidContact</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rigid Bodies contact information. Each contact in simulation generates a set of information.</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.body0">
+<em class="property">property </em><code class="sig-name descname">body0</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.body0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Colliding rigid body indexes in the environment, -1 if it is ground plane</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.body1">
+<em class="property">property </em><code class="sig-name descname">body1</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.body1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Colliding rigid body indexes in the environment, -1 if it is ground plane</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.env0">
+<em class="property">property </em><code class="sig-name descname">env0</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.env0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Environment contact body0 belongs to, -1 if it is shared/unrecognized env</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.env1">
+<em class="property">property </em><code class="sig-name descname">env1</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.env1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Environment contact body1 belongs to, -1 if it is shared/unrecognized env</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.friction">
+<em class="property">property </em><code class="sig-name descname">friction</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.friction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Effective coefficient of Friction between bodies pair</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.initial_overlap">
+<em class="property">property </em><code class="sig-name descname">initial_overlap</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.initial_overlap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Amount of overlap along normal direction at the start of the time-step</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.lambda">
+<em class="property">property </em><code class="sig-name descname">lambda</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.lambda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contact force magnitude</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.lambda_friction">
+<em class="property">property </em><code class="sig-name descname">lambda_friction</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.lambda_friction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Friction forces magnitudes. The direction of the friction force is the projection on the normal plane of the relative velocity of the bodies.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.local_pos0">
+<em class="property">property </em><code class="sig-name descname">local_pos0</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.local_pos0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Local space position of the body0 contact feature excluding thickness, normal forces applied here</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.local_pos1">
+<em class="property">property </em><code class="sig-name descname">local_pos1</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.local_pos1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Local space position of the body1 contact feature excluding thickness, normal forces applied here</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.min_dist">
+<em class="property">property </em><code class="sig-name descname">min_dist</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.min_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum distance to try and maintain along the contact normal between the two points</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.normal">
+<em class="property">property </em><code class="sig-name descname">normal</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.normal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contact normal from body0-&gt;body1 in world space</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.offset0">
+<em class="property">property </em><code class="sig-name descname">offset0</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.offset0" title="Permalink to this definition">¶</a></dt>
+<dd><p>The local space offset from the feature localPos0 to the surface. That’s the location where friction will be applied</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.offset1">
+<em class="property">property </em><code class="sig-name descname">offset1</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.offset1" title="Permalink to this definition">¶</a></dt>
+<dd><p>The local space offset from the feature localPos1 to the surface. That’s the location where friction will be applied</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.rolling_friction">
+<em class="property">property </em><code class="sig-name descname">rolling_friction</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.rolling_friction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Effective coeffitienc of Rolling Friction between bodies pair</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.RigidContact.torsion_friction">
+<em class="property">property </em><code class="sig-name descname">torsion_friction</code><a class="headerlink" href="#isaacgym.gymapi.RigidContact.torsion_friction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Effective coefficient of Torsional friction between bodies pair</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.ActionEvent">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">ActionEvent</code><a class="headerlink" href="#isaacgym.gymapi.ActionEvent" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="isaacgym.gymapi.ActionEvent.action">
+<em class="property">property </em><code class="sig-name descname">action</code><a class="headerlink" href="#isaacgym.gymapi.ActionEvent.action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.ActionEvent.value">
+<em class="property">property </em><code class="sig-name descname">value</code><a class="headerlink" href="#isaacgym.gymapi.ActionEvent.value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.FlexParams">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">FlexParams</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulation parameters used for FleX physics engine</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.contact_regularization">
+<em class="property">property </em><code class="sig-name descname">contact_regularization</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.contact_regularization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distance for soft bodies to maintain against ground planes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.deterministic_mode">
+<em class="property">property </em><code class="sig-name descname">deterministic_mode</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.deterministic_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag to activate deterministic simulation. Flex Newton solver only</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.dynamic_friction">
+<em class="property">property </em><code class="sig-name descname">dynamic_friction</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.dynamic_friction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coefficient of friction used when colliding against shapes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.friction_mode">
+<em class="property">property </em><code class="sig-name descname">friction_mode</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.friction_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type of friction mode:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>0 single friction dir, non-linear cone projection, but can't change direction during linear solve</dt><dd><ul>
+<li><p>1 two friction dirs, non-linear cone projection, can change direction during linear solve</p></li>
+<li><p>2 same as above plus torsional (spinning) friction</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.geometric_stiffness">
+<em class="property">property </em><code class="sig-name descname">geometric_stiffness</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.geometric_stiffness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Improves stability of joints by approximating the system Hessian</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.max_rigid_contacts">
+<em class="property">property </em><code class="sig-name descname">max_rigid_contacts</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.max_rigid_contacts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Max number of rigid body contacts</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.max_soft_contacts">
+<em class="property">property </em><code class="sig-name descname">max_soft_contacts</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.max_soft_contacts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Max number of soft body contacts</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.num_inner_iterations">
+<em class="property">property </em><code class="sig-name descname">num_inner_iterations</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.num_inner_iterations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of inner loop iterations taken by the solver per simulation step. Is used only by Newton solver.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.num_outer_iterations">
+<em class="property">property </em><code class="sig-name descname">num_outer_iterations</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.num_outer_iterations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of iterations taken by the solver per simulation step.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.particle_friction">
+<em class="property">property </em><code class="sig-name descname">particle_friction</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.particle_friction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coefficient of friction used when colliding particles</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.relaxation">
+<em class="property">property </em><code class="sig-name descname">relaxation</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.relaxation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Control the convergence rate of the parallel solver. Values greater than 1 may lead to instability.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.return_contacts">
+<em class="property">property </em><code class="sig-name descname">return_contacts</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.return_contacts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read contact information back to CPU</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.shape_collision_distance">
+<em class="property">property </em><code class="sig-name descname">shape_collision_distance</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.shape_collision_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distance for soft bodies to maintain against rigid bodies and ground plane</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.shape_collision_margin">
+<em class="property">property </em><code class="sig-name descname">shape_collision_margin</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.shape_collision_margin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distance for rigid bodies at which contacts are generated</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.solver_type">
+<em class="property">property </em><code class="sig-name descname">solver_type</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.solver_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type of solver used:</p>
+<ul class="simple">
+<li><p>0 = XPBD (GPU)</p></li>
+<li><p>1 = Newton Jacobi (GPU)</p></li>
+<li><p>2 = Newton LDLT (CPU)</p></li>
+<li><p>3 = Newton PCG (CPU)</p></li>
+<li><p>4 = Newton PCG (GPU)</p></li>
+<li><p>5 = Newton PCR (GPU)</p></li>
+<li><p>6 = Newton Gauss Seidel (CPU)</p></li>
+<li><p>7 = Newton NNCG (GPU)</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.static_friction">
+<em class="property">property </em><code class="sig-name descname">static_friction</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.static_friction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coefficient of static friction used when colliding against shapes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.FlexParams.warm_start">
+<em class="property">property </em><code class="sig-name descname">warm_start</code><a class="headerlink" href="#isaacgym.gymapi.FlexParams.warm_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fraction of the cached Lagrange Multiplier to be used on the next simulation step.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.PhysXParams">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">PhysXParams</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulation parameters used for PhysX physics engine</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.always_use_articulations">
+<em class="property">property </em><code class="sig-name descname">always_use_articulations</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.always_use_articulations" title="Permalink to this definition">¶</a></dt>
+<dd><p>If set, even single-body actors will be created as articulations</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.bounce_threshold_velocity">
+<em class="property">property </em><code class="sig-name descname">bounce_threshold_velocity</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.bounce_threshold_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>A contact with a relative velocity below this will not bounce. A typical value for simulation stability is about 0.2 * gravity.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.contact_collection">
+<em class="property">property </em><code class="sig-name descname">contact_collection</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.contact_collection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contact collection mode</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.contact_offset">
+<em class="property">property </em><code class="sig-name descname">contact_offset</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.contact_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shapes whose distance is less than the sum of their contactOffset values will generate contacts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.default_buffer_size_multiplier">
+<em class="property">property </em><code class="sig-name descname">default_buffer_size_multiplier</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.default_buffer_size_multiplier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default buffer size multiplier</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.friction_correlation_distance">
+<em class="property">property </em><code class="sig-name descname">friction_correlation_distance</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.friction_correlation_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Friction correlation distance</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.friction_offset_threshold">
+<em class="property">property </em><code class="sig-name descname">friction_offset_threshold</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.friction_offset_threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Friction offset threshold</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.max_depenetration_velocity">
+<em class="property">property </em><code class="sig-name descname">max_depenetration_velocity</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.max_depenetration_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum velocity permitted to be introduced by the solver to correct for penetrations in contacts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.max_gpu_contact_pairs">
+<em class="property">property </em><code class="sig-name descname">max_gpu_contact_pairs</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.max_gpu_contact_pairs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of contact pairs</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.num_position_iterations">
+<em class="property">property </em><code class="sig-name descname">num_position_iterations</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.num_position_iterations" title="Permalink to this definition">¶</a></dt>
+<dd><p>PhysX solver position iterations count. Range [1,255]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.num_subscenes">
+<em class="property">property </em><code class="sig-name descname">num_subscenes</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.num_subscenes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of subscenes for multithreaded simulation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.num_threads">
+<em class="property">property </em><code class="sig-name descname">num_threads</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.num_threads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of CPU threads used by PhysX. Should be set before the simulation is created. Setting this to 0 will run the simulation on the thread that calls PxScene::simulate(). A value greater than 0 will spawn numCores-1 worker threads.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.num_velocity_iterations">
+<em class="property">property </em><code class="sig-name descname">num_velocity_iterations</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.num_velocity_iterations" title="Permalink to this definition">¶</a></dt>
+<dd><p>PhysX solver velocity iterations count. Range [1,255]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.rest_offset">
+<em class="property">property </em><code class="sig-name descname">rest_offset</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.rest_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two shapes will come to rest at a distance equal to the sum of their restOffset values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.solver_type">
+<em class="property">property </em><code class="sig-name descname">solver_type</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.solver_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type of solver used.</p>
+<ul class="simple">
+<li><p>0 : PGS (Iterative sequential impulse solver</p></li>
+<li><p>1 : TGS (Non-linear iterative solver, more robust but slightly more expensive</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PhysXParams.use_gpu">
+<em class="property">property </em><code class="sig-name descname">use_gpu</code><a class="headerlink" href="#isaacgym.gymapi.PhysXParams.use_gpu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use PhysX GPU. Disabled at the moment.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.SimParams">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">SimParams</code><a class="headerlink" href="#isaacgym.gymapi.SimParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gym Simulation Parameters</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.SimParams.dt">
+<em class="property">property </em><code class="sig-name descname">dt</code><a class="headerlink" href="#isaacgym.gymapi.SimParams.dt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulation step size</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SimParams.enable_actor_creation_warning">
+<em class="property">property </em><code class="sig-name descname">enable_actor_creation_warning</code><a class="headerlink" href="#isaacgym.gymapi.SimParams.enable_actor_creation_warning" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SimParams.flex">
+<em class="property">property </em><code class="sig-name descname">flex</code><a class="headerlink" href="#isaacgym.gymapi.SimParams.flex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flex specific simulation parameters (See <a class="reference internal" href="#isaacgym.gymapi.FlexParams" title="isaacgym.gymapi.FlexParams"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isaacgym.gymapi.FlexParams</span></code></a>)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SimParams.gravity">
+<em class="property">property </em><code class="sig-name descname">gravity</code><a class="headerlink" href="#isaacgym.gymapi.SimParams.gravity" title="Permalink to this definition">¶</a></dt>
+<dd><p>3-Dimension vector representing gravity force in Newtons.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SimParams.num_client_threads">
+<em class="property">property </em><code class="sig-name descname">num_client_threads</code><a class="headerlink" href="#isaacgym.gymapi.SimParams.num_client_threads" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SimParams.physx">
+<em class="property">property </em><code class="sig-name descname">physx</code><a class="headerlink" href="#isaacgym.gymapi.SimParams.physx" title="Permalink to this definition">¶</a></dt>
+<dd><p>PhysX specific simulation parameters (See <a class="reference internal" href="#isaacgym.gymapi.PhysXParams" title="isaacgym.gymapi.PhysXParams"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isaacgym.gymapi.PhysXParams</span></code></a>)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SimParams.stress_visualization">
+<em class="property">property </em><code class="sig-name descname">stress_visualization</code><a class="headerlink" href="#isaacgym.gymapi.SimParams.stress_visualization" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SimParams.stress_visualization_max">
+<em class="property">property </em><code class="sig-name descname">stress_visualization_max</code><a class="headerlink" href="#isaacgym.gymapi.SimParams.stress_visualization_max" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SimParams.stress_visualization_min">
+<em class="property">property </em><code class="sig-name descname">stress_visualization_min</code><a class="headerlink" href="#isaacgym.gymapi.SimParams.stress_visualization_min" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SimParams.substeps">
+<em class="property">property </em><code class="sig-name descname">substeps</code><a class="headerlink" href="#isaacgym.gymapi.SimParams.substeps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of subSteps for simulation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SimParams.up_axis">
+<em class="property">property </em><code class="sig-name descname">up_axis</code><a class="headerlink" href="#isaacgym.gymapi.SimParams.up_axis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Up axis</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.SimParams.use_gpu_pipeline">
+<em class="property">property </em><code class="sig-name descname">use_gpu_pipeline</code><a class="headerlink" href="#isaacgym.gymapi.SimParams.use_gpu_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.AssetOptions">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">AssetOptions</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a set of properties for assets imported into Gym.</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.angular_damping">
+<em class="property">property </em><code class="sig-name descname">angular_damping</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.angular_damping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Angular velocity damping for rigid bodies</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.armature">
+<em class="property">property </em><code class="sig-name descname">armature</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.armature" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value added to the diagonal elements of inertia tensors for all of the asset’s rigid bodies/links. Could improve simulation stability</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.collapse_fixed_joints">
+<em class="property">property </em><code class="sig-name descname">collapse_fixed_joints</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.collapse_fixed_joints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge links that are connected by fixed joints.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.default_dof_drive_mode">
+<em class="property">property </em><code class="sig-name descname">default_dof_drive_mode</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.default_dof_drive_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default mode used to actuate Asset joints. See <code class="xref py py-obj docutils literal notranslate"><span class="pre">isaacgym.gymapi.DriveModeFlags</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.density">
+<em class="property">property </em><code class="sig-name descname">density</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default density parameter used for calculating mass and inertia tensor when no mass and inertia data are provided, in $kg/m^3$.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.disable_gravity">
+<em class="property">property </em><code class="sig-name descname">disable_gravity</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.disable_gravity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables gravity for asset.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.fix_base_link">
+<em class="property">property </em><code class="sig-name descname">fix_base_link</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.fix_base_link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set Asset base to a fixed placement upon import.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.flip_visual_attachments">
+<em class="property">property </em><code class="sig-name descname">flip_visual_attachments</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.flip_visual_attachments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Switch Meshes from Z-up left-handed system to Y-up Right-handed coordinate system.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.linear_damping">
+<em class="property">property </em><code class="sig-name descname">linear_damping</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.linear_damping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Linear velocity damping for rigid bodies.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.max_angular_velocity">
+<em class="property">property </em><code class="sig-name descname">max_angular_velocity</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.max_angular_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum angular velocity for rigid bodies. In $rad/s$.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.max_linear_velocity">
+<em class="property">property </em><code class="sig-name descname">max_linear_velocity</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.max_linear_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum linear velocity for rigid bodies. In $m/s$.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.min_particle_mass">
+<em class="property">property </em><code class="sig-name descname">min_particle_mass</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.min_particle_mass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum mass for particles in soft bodies, in Kg</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.replace_cylinder_with_capsule">
+<em class="property">property </em><code class="sig-name descname">replace_cylinder_with_capsule</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.replace_cylinder_with_capsule" title="Permalink to this definition">¶</a></dt>
+<dd><p>flag to replace Cylinders with capsules for additional performance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.slices_per_cylinder">
+<em class="property">property </em><code class="sig-name descname">slices_per_cylinder</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.slices_per_cylinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of faces on generated cylinder mesh, excluding top and bottom.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.tendon_limit_stiffness">
+<em class="property">property </em><code class="sig-name descname">tendon_limit_stiffness</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.tendon_limit_stiffness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default tendon limit stiffness. Choose small as the limits are not implicitly solved. Avoid oscillations by setting an apporpriate damping value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.thickness">
+<em class="property">property </em><code class="sig-name descname">thickness</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.thickness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Thickness of the collision shapes. Sets how far objects should come to rest from the surface of this body</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.use_obj">
+<em class="property">property </em><code class="sig-name descname">use_obj</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.use_obj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag used to indicate if the mesh used should be loaded from an obj file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.AssetOptions.use_physx_armature">
+<em class="property">property </em><code class="sig-name descname">use_physx_armature</code><a class="headerlink" href="#isaacgym.gymapi.AssetOptions.use_physx_armature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use joint space armature instead of links inertia tensor modififcations.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.CameraProperties">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">CameraProperties</code><a class="headerlink" href="#isaacgym.gymapi.CameraProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Properties for a camera in Gym</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.CameraProperties.enable_tensors">
+<em class="property">property </em><code class="sig-name descname">enable_tensors</code><a class="headerlink" href="#isaacgym.gymapi.CameraProperties.enable_tensors" title="Permalink to this definition">¶</a></dt>
+<dd><p>CUDA interop buffers will be available only if this is true.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.CameraProperties.far_plane">
+<em class="property">property </em><code class="sig-name descname">far_plane</code><a class="headerlink" href="#isaacgym.gymapi.CameraProperties.far_plane" title="Permalink to this definition">¶</a></dt>
+<dd><p>distance in world coordinates to far-clipping plane</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.CameraProperties.height">
+<em class="property">property </em><code class="sig-name descname">height</code><a class="headerlink" href="#isaacgym.gymapi.CameraProperties.height" title="Permalink to this definition">¶</a></dt>
+<dd><p>Height of output images in pixels</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.CameraProperties.horizontal_fov">
+<em class="property">property </em><code class="sig-name descname">horizontal_fov</code><a class="headerlink" href="#isaacgym.gymapi.CameraProperties.horizontal_fov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Horizontal field of view in degrees. Vertical field of view is calculated from height to width ratio</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.CameraProperties.near_plane">
+<em class="property">property </em><code class="sig-name descname">near_plane</code><a class="headerlink" href="#isaacgym.gymapi.CameraProperties.near_plane" title="Permalink to this definition">¶</a></dt>
+<dd><p>distance in world coordinate units to near-clipping plane</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.CameraProperties.supersampling_horizontal">
+<em class="property">property </em><code class="sig-name descname">supersampling_horizontal</code><a class="headerlink" href="#isaacgym.gymapi.CameraProperties.supersampling_horizontal" title="Permalink to this definition">¶</a></dt>
+<dd><p>oversampling factor in the horiziontal/X direction</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.CameraProperties.supersampling_vertical">
+<em class="property">property </em><code class="sig-name descname">supersampling_vertical</code><a class="headerlink" href="#isaacgym.gymapi.CameraProperties.supersampling_vertical" title="Permalink to this definition">¶</a></dt>
+<dd><p>oversampling factor in the vertical/Y direction</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.CameraProperties.use_collision_geometry">
+<em class="property">property </em><code class="sig-name descname">use_collision_geometry</code><a class="headerlink" href="#isaacgym.gymapi.CameraProperties.use_collision_geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>If true, camera renders collision meshes instead of visual meshes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.CameraProperties.width">
+<em class="property">property </em><code class="sig-name descname">width</code><a class="headerlink" href="#isaacgym.gymapi.CameraProperties.width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Width of output images in pixels</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="isaacgym.gymapi.PerformanceTimers">
+<em class="property">class </em><code class="sig-prename descclassname">isaacgym.gymapi.</code><code class="sig-name descname">PerformanceTimers</code><a class="headerlink" href="#isaacgym.gymapi.PerformanceTimers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Amount of time in seconds spent doing the respective activity since last query</p>
+<dl class="py method">
+<dt id="isaacgym.gymapi.PerformanceTimers.frame_idling">
+<em class="property">property </em><code class="sig-name descname">frame_idling</code><a class="headerlink" href="#isaacgym.gymapi.PerformanceTimers.frame_idling" title="Permalink to this definition">¶</a></dt>
+<dd><p>idling to keep updates close to graphics framerate</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PerformanceTimers.graphics_image_retrieval">
+<em class="property">property </em><code class="sig-name descname">graphics_image_retrieval</code><a class="headerlink" href="#isaacgym.gymapi.PerformanceTimers.graphics_image_retrieval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copying images from the GPU to CPU</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PerformanceTimers.graphics_sensor_rendering">
+<em class="property">property </em><code class="sig-name descname">graphics_sensor_rendering</code><a class="headerlink" href="#isaacgym.gymapi.PerformanceTimers.graphics_sensor_rendering" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rendering image sensors</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PerformanceTimers.graphics_viewer_rendering">
+<em class="property">property </em><code class="sig-name descname">graphics_viewer_rendering</code><a class="headerlink" href="#isaacgym.gymapi.PerformanceTimers.graphics_viewer_rendering" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rendering the viewer</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PerformanceTimers.physics_data_movement">
+<em class="property">property </em><code class="sig-name descname">physics_data_movement</code><a class="headerlink" href="#isaacgym.gymapi.PerformanceTimers.physics_data_movement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copying physics state to/from the GPU</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PerformanceTimers.physics_sim">
+<em class="property">property </em><code class="sig-name descname">physics_sim</code><a class="headerlink" href="#isaacgym.gymapi.PerformanceTimers.physics_sim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Running physics simulation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="isaacgym.gymapi.PerformanceTimers.total_time">
+<em class="property">property </em><code class="sig-name descname">total_time</code><a class="headerlink" href="#isaacgym.gymapi.PerformanceTimers.total_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>sum of all other timers</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="enum_py.html" class="btn btn-neutral float-right" title="Python Enums" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gym_py.html" class="btn btn-neutral float-left" title="Python Gym API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, NVIDIA Corporation
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

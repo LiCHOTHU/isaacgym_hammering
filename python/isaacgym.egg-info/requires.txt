@@ -1,0 +1,11 @@
+torch>=1.4.0
+torchvision>=0.5.0
+numpy>=1.16.4
+scipy>=1.5.0
+pyyaml>=5.3.1
+gym>=0.17.1
+tensorboard>=2.2.1
+pillow
+imageio
+ninja
+rl_pytorch@ file://localhost/home/licho/workspace/isaacgym/python/rlgpu/rl-pytorch

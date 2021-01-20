@@ -1,0 +1,33 @@
+Python Enums
+############
+
+.. autoclass:: isaacgym.gymapi.JointType
+    :undoc-members:
+    
+.. autoclass:: isaacgym.gymapi.DofType
+    :undoc-members:
+    
+.. autoclass:: isaacgym.gymapi.SimType
+    :undoc-members:
+    
+.. autoclass:: isaacgym.gymapi.KeyboardInput
+    :undoc-members:
+    
+.. autoclass:: isaacgym.gymapi.MouseInput
+    :undoc-members:
+    
+.. autoclass:: isaacgym.gymapi.MeshType
+    :undoc-members:
+    
+.. autoclass:: isaacgym.gymapi.ImageType
+    :undoc-members:
+    
+.. autoclass:: isaacgym.gymapi.UsdMaterialMode
+    :undoc-members:
+    
+.. autoclass:: isaacgym.gymapi.IndexDomain
+    :undoc-members:
+    
+.. autoclass:: isaacgym.gymapi.SoftMaterialType
+    :undoc-members:
+    
