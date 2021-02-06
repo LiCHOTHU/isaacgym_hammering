@@ -17,6 +17,7 @@ from isaacgym import gymapi
 from isaacgym import gymutil
 from isaacgym import gymtorch
 from isaacgym.torch_utils import *
+import matplotlib.pyplot as plt
 
 import math
 import numpy as np
@@ -40,7 +41,7 @@ def orientation_error(desired, current):
 def cube_grasping_yaw(q, corners):
     """ returns horizontal rotation required to grasp cube """
     rc = quat_rotate(q, corners)
-    yaw = (torch.atan2(rc[:, 1], rc[:, 0]) - 0.25 * math.pi) % (1 * math.pi)
+    yaw = (torch.atan2(rc[:, 1], rc[:, 0]) - 0.25 * math.pi) % (2 * math.pi)
     theta = 0.5 * yaw
     w = theta.cos()
     x = torch.zeros_like(w)
@@ -48,6 +49,114 @@ def cube_grasping_yaw(q, corners):
     z = theta.sin()
     yaw_quats = torch.stack([x, y, z, w], dim=-1)
     return yaw_quats
+
+
+def compute_franka_reward(
+    actions, device,
+    hammer_pose, object_pose, object_linvel,
+    franka_lfinger_pos, franka_lfinger_rot, franka_rfinger_pos, franka_rfinger_rot, down_dir,
+    num_envs, dist_reward_scale, rot_reward_scale, around_handle_reward_scale, open_reward_scale,
+    finger_dist_reward_scale, action_penalty_scale, distX_offset, max_episode_length
+):
+    # type: (Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, int, float, float, float, float, float, float, float, float) -> Tuple[Tensor, Tensor]
+    # how far the hand should be from hammer for grasping
+    grasp_offset = 0.06
+    gripper_close_offset = 0.025
+
+    # set the reward weight and some configs here
+    gripper_above_hammer_weight = 5.0
+    gripper_to_hammer_dist_weight = 30.0
+    two_finger_dist_reward_weight = 35.0
+    gripper_downward_weight = 5.0
+    gripper_hammer_y_weight = 3.0
+    gripper_both_sides_weight = 5.0
+    hammer_lift_weight = 10000.0
+    hammer_init_height = 0.42
+    hammer_max_height = 0.8
+
+    # calculate grasp reward
+
+    # calculate the gripper to hammer direction
+    franka_gripper_pos = (franka_lfinger_pos + franka_rfinger_pos) / 2.0
+    hammer_pos = hammer_pose[:, :3]
+
+    to_hammer = (hammer_pos - franka_gripper_pos).to(device)
+    gripper_hammer_dist = torch.norm(to_hammer, dim=-1).unsqueeze(-1)
+    gripper_hammer_dir = to_hammer / gripper_hammer_dist
+
+    gripper_hammer_dot = gripper_hammer_dir @ down_dir.view(3, 1)
+    above_hammer_reward = (gripper_above_hammer_weight * (gripper_hammer_dot ** 2)*torch.sign(gripper_hammer_dot)).squeeze()
+
+
+    # calculate the gripper to hammer distance
+    d = torch.norm(franka_gripper_pos - hammer_pos, p=2, dim=-1).to(device)
+    dist_reward = torch.where(d > grasp_offset, 1.0 - torch.tanh(d), to_torch([1.0]).repeat(num_envs).to(device))
+    gripper_to_hammer_reward = dist_reward * gripper_to_hammer_dist_weight
+
+    rewards = dist_reward * gripper_to_hammer_dist_weight
+    rewards += above_hammer_reward
+
+    # calculate the gripper towards direction should be facing downward
+    gripper_rot = (franka_lfinger_rot + franka_rfinger_rot).to(device) / 2.0
+    z_dir = to_torch([0, 0, 1]).repeat(num_envs, 1).to(device)
+    gripper_z_dir = quat_apply(gripper_rot, z_dir)
+    gripper_z_dot = gripper_z_dir @ down_dir.view(3, 1)
+    gripper_downward_reward = (torch.sign(gripper_z_dot)*(gripper_z_dot**2) * gripper_downward_weight).squeeze()
+    rewards += gripper_downward_reward
+
+    # calculate the reward if the gripper_y and hammer_y alignment
+    hammer_rot = hammer_pose[:, 3:7].to(device)
+    y_dir = to_torch([0, 1, 0]).repeat(num_envs, 1).to(device)
+    hammer_y_dir = quat_apply(hammer_rot, y_dir)
+    gripper_y_dir = quat_apply(gripper_rot, y_dir)
+    gripper_hammer_y_dot = torch.bmm(hammer_y_dir.view(num_envs, 1, 3), gripper_y_dir.view(num_envs, 3, 1))
+    gripper_hammer_y_reward = ((gripper_hammer_y_dot ** 2) * gripper_hammer_y_weight).squeeze()
+    rewards += gripper_hammer_y_reward
+
+    # if gripper is close to hammer, add bonus for gripper on both sides of hammer
+    hammer_to_lfinger = franka_lfinger_pos - hammer_pos
+    hammer_to_lfinger_dist = torch.norm(hammer_to_lfinger, dim=-1).unsqueeze(-1)
+    hammer_to_lfinger_dir = hammer_to_lfinger / hammer_to_lfinger_dist
+
+    hammer_to_rfinger = franka_rfinger_pos - hammer_pos
+    hammer_to_rfinger_dist = torch.norm(hammer_to_rfinger, dim=-1).unsqueeze(-1)
+    hammer_to_rfinger_dir = hammer_to_rfinger / hammer_to_rfinger_dist
+
+    hammer_both_sides_dot = torch.bmm(hammer_to_lfinger_dir.view(num_envs, 1, 3), hammer_to_rfinger_dir.view(num_envs, 3, 1)).squeeze()
+    both_sides_reward = -torch.sign(hammer_both_sides_dot) * hammer_both_sides_dot ** 2
+
+    rewards += both_sides_reward * gripper_both_sides_weight
+
+
+    # add reward of distance of two fingers to hammer to encourage gripper close
+    lfinger_dist = torch.norm(franka_lfinger_pos - hammer_pos, dim=-1)
+    rfinger_dist = torch.norm(franka_rfinger_pos - hammer_pos, dim=-1)
+
+    two_finger_dist = 2 - torch.tanh(lfinger_dist) - torch.tanh(rfinger_dist)
+
+    # hand_hammer_close = (gripper_hammer_dist < grasp_offset).squeeze()
+    two_finger_dist_reward = two_finger_dist_reward_weight * (two_finger_dist).squeeze()
+    rewards += two_finger_dist_reward
+
+    # determine if we're holding the hammer (grippers are closed and box is near)
+    gripper_sep = torch.norm(franka_lfinger_pos - franka_rfinger_pos, dim =-1).unsqueeze(-1).to(device)
+    gripped = (gripper_sep < gripper_close_offset) & (gripper_hammer_dist < grasp_offset)
+
+    # add penalty for dropping off the table
+    hammer_drop_table = (hammer_pos[:, 2] < 0.4).float().squeeze().to(device)
+    hammer_drop_penalty = -1000 * hammer_drop_table
+    rewards += hammer_drop_penalty
+
+    # add reward for lifting the hammer
+    hammer_lift_height = torch.clamp(hammer_pos[:, 2] - hammer_init_height, 0, hammer_max_height).to(device)
+    hammer_lift_reward = gripped.float().squeeze() * hammer_lift_height * hammer_lift_weight
+    rewards += hammer_lift_reward
+
+    # regularization on the actions (summed for each environment)
+    action_penalty = torch.sum(actions.squeeze() ** 2, dim=-1).to(device)
+    rewards -= action_penalty_scale * action_penalty
+
+    return rewards, above_hammer_reward, gripper_to_hammer_reward, gripper_downward_reward, gripper_hammer_y_reward, hammer_lift_reward, both_sides_reward, two_finger_dist_reward
 
 
 # set random seed
@@ -82,6 +191,7 @@ else:
     raise Exception("This example can only be used with PhysX")
 
 # set torch device
+# device = 'cuda'
 device = 'cuda' if sim_params.use_gpu_pipeline else 'cpu'
 
 # create sim
@@ -102,17 +212,18 @@ asset_options = gymapi.AssetOptions()
 asset_options.fix_base_link = True
 table_asset = gym.create_box(sim, table_dims.x, table_dims.y, table_dims.z, asset_options)
 
-'''
-# create box asset
-box_size = 0.045
-asset_options = gymapi.AssetOptions()
-box_asset = gym.create_box(sim, box_size, box_size, box_size, asset_options)
-'''
 
 # create box asset
-box_asset_file = "urdf/hammer.urdf"
+box_size = 0.03
+box_dims = gymapi.Vec3(0.04, 0.04, 0.04)
 asset_options = gymapi.AssetOptions()
-box_size = 0.045
+box_asset = gym.create_box(sim, box_dims.x, box_dims.y, box_dims.z, asset_options)
+
+
+# create hammer asset
+box_asset_file = "urdf/hammer_convex.urdf"
+asset_options = gymapi.AssetOptions()
+box_size = 0.035
 box_asset = gym.load_asset(sim, asset_root, box_asset_file, asset_options)
 
 # load franka asset
@@ -158,7 +269,7 @@ box_dof = gym.get_asset_rigid_body_count(box_asset)
 
 
 # configure env grid
-num_envs = 64
+num_envs = 1
 num_per_row = int(math.sqrt(num_envs))
 spacing = 1.0
 env_lower = gymapi.Vec3(-spacing, 0.0, -spacing)
@@ -178,6 +289,7 @@ box_idxs = []
 hand_idxs = []
 init_pos_list = []
 init_rot_list = []
+hammer_actor_idxs = []
 
 # add ground plane
 plane_params = gymapi.PlaneParams()
@@ -193,13 +305,17 @@ for i in range(num_envs):
     table_handle = gym.create_actor(env, table_asset, table_pose, "table", i, 0)
 
     # add box
-    box_pose.p.x = table_pose.p.x + np.random.uniform(-0.2, 0.1)
-    box_pose.p.y = table_pose.p.y + np.random.uniform(-0.3, 0.3)
+    box_pose.p.x = table_pose.p.x + np.random.uniform(-0.1, 0.1)
+    box_pose.p.y = table_pose.p.y + np.random.uniform(-0.2, 0.2)
     box_pose.p.z = table_dims.z + 0.5 * box_size
     box_pose.r = gymapi.Quat.from_axis_angle(gymapi.Vec3(0, 0, 1), np.random.uniform(-math.pi, math.pi))
     box_handle = gym.create_actor(env, box_asset, box_pose, "box", i, 0)
     color = gymapi.Vec3(np.random.uniform(0, 1), np.random.uniform(0, 1), np.random.uniform(0, 1))
     gym.set_rigid_body_color(env, box_handle, 0, gymapi.MESH_VISUAL_AND_COLLISION, color)
+
+    # get hammer actor index
+    hammer_actor_idx = gym.get_actor_index(env, box_handle, gymapi.DOMAIN_SIM)
+    hammer_actor_idxs.append(hammer_actor_idx)
 
     # get global index of box in rigid body state tensor
     box_idx = gym.get_actor_rigid_body_index(env, box_handle, 0, gymapi.DOMAIN_SIM)
@@ -207,6 +323,7 @@ for i in range(num_envs):
 
     # add franka
     franka_handle = gym.create_actor(env, franka_asset, franka_pose, "franka", i, 2)
+
 
     # set dof properties
     gym.set_actor_dof_properties(env, franka_handle, franka_dof_props)
@@ -226,6 +343,11 @@ for i in range(num_envs):
     # get global index of hand in rigid body state tensor
     hand_idx = gym.find_actor_rigid_body_index(env, franka_handle, "panda_hand", gymapi.DOMAIN_SIM)
     hand_idxs.append(hand_idx)
+
+    # save left and right finger handle
+    lfinger_handle = gym.find_actor_rigid_body_handle(env, franka_handle, "panda_leftfinger")
+    rfinger_handle = gym.find_actor_rigid_body_handle(env, franka_handle, "panda_rightfinger")
+
 
 # point camera at middle env
 cam_pos = gymapi.Vec3(4, 3, 2)
@@ -261,6 +383,10 @@ jacobian = gymtorch.wrap_tensor(_jacobian)
 # jacobian entries corresponding to franka hand
 j_eef = jacobian[:, franka_hand_index - 1, :]
 
+# Actor root state tensor
+_actor_root_state_tensor = gym.acquire_actor_root_state_tensor(sim)
+actor_root_state_tensor = gymtorch.wrap_tensor(_actor_root_state_tensor).view(-1, 13)
+
 # get rigid body state tensor
 _rb_states = gym.acquire_rigid_body_state_tensor(sim)
 rb_states = gymtorch.wrap_tensor(_rb_states)
@@ -273,6 +399,18 @@ dof_pos = dof_states[:, 0].view(num_envs, 9, 1)
 # Create a tensor noting whether the hand should return to the initial position
 hand_restart = torch.full([num_envs], False, dtype=torch.bool).to(device)
 
+# save some reward list
+rewards = []
+gripper_hammer_dir_rewards = []
+gripper_hammer_dis_rewards = []
+gripper_down_rewards = []
+gripper_hammer_y_rewards = []
+hammer_lift_rewards = []
+both_side_rewards = []
+two_finger_dist_rewards = []
+
+itr = 0
+
 # simulation loop
 while not gym.query_viewer_has_closed(viewer):
     # step the physics
@@ -283,6 +421,7 @@ while not gym.query_viewer_has_closed(viewer):
     gym.refresh_rigid_body_state_tensor(sim)
     gym.refresh_dof_state_tensor(sim)
     gym.refresh_jacobian_tensors(sim)
+    gym.refresh_actor_root_state_tensor(sim)
 
     box_pos = rb_states[box_idxs, :3]
     box_rot = rb_states[box_idxs, 3:7]
@@ -295,12 +434,26 @@ while not gym.query_viewer_has_closed(viewer):
     box_dir = to_box / box_dist
     box_dot = box_dir @ down_dir.view(3, 1)
 
+    # get pose for hammer, box and finger
+    hammer_pose = actor_root_state_tensor[hammer_actor_idxs, 0:7]
+    hammer_pos = actor_root_state_tensor[hammer_actor_idxs, 0:3]
+    hammer_rot = actor_root_state_tensor[hammer_actor_idxs, 3:7]
+    hammer_linvel = actor_root_state_tensor[hammer_actor_idxs, 7:10]
+    hammer_angvel = actor_root_state_tensor[hammer_actor_idxs, 10:13]
+
+    rb_states_reshape = rb_states.view(num_envs, -1, 13)
+
+    franka_lfinger_pos = rb_states_reshape[:, lfinger_handle][:, 0:3]
+    franka_rfinger_pos = rb_states_reshape[:, rfinger_handle][:, 0:3]
+    franka_lfinger_rot = rb_states_reshape[:, lfinger_handle][:, 3:7]
+    franka_rfinger_rot = rb_states_reshape[:, rfinger_handle][:, 3:7]
+
     # how far the hand should be from box for grasping
-    grasp_offset = 0.12
+    grasp_offset = 0.1
 
     # determine if we're holding the box (grippers are closed and box is near)
     gripper_sep = dof_pos[:, 7] + dof_pos[:, 8]
-    gripped = (gripper_sep < 0.045) & (box_dist < grasp_offset + 0.5 * box_size)
+    gripped = (gripper_sep < box_size) & (box_dist < grasp_offset + 0.5 * box_size)
 
     yaw_q = cube_grasping_yaw(box_rot, corners)
     box_yaw_dir = quat_axis(yaw_q, 0)
@@ -340,7 +493,7 @@ while not gym.query_viewer_has_closed(viewer):
     # gripper actions depend on distance between hand and box
     close_gripper = (box_dist < grasp_offset + 0.02) | gripped
     # always open the gripper above a certain height, dropping the box and restarting from the beginning
-    hand_restart = hand_restart | (box_pos[:, 2] > 0.6)
+    hand_restart = hand_restart | (box_pos[:, 2] > 0.7)
     keep_going = torch.logical_not(hand_restart)
     close_gripper = close_gripper & keep_going.unsqueeze(-1)
     grip_acts = torch.where(close_gripper, torch.Tensor([[0., 0.]] * num_envs).to(device), torch.Tensor([[0.04, 0.04]] * num_envs).to(device))
@@ -353,6 +506,90 @@ while not gym.query_viewer_has_closed(viewer):
     gym.step_graphics(sim)
     gym.draw_viewer(viewer, sim, False)
     gym.sync_frame_time(sim)
+
+    # check reward plot
+    down_dir = torch.Tensor([0, 0, -1]).to(device).view(1, 3)
+    dist_reward_scale = 1.5
+    rot_reward_scale = 0.5
+    around_handle_reward_scale = 1.0
+    open_reward_scale = 4.0
+    finger_dist_reward_scale = 10.0
+    action_penalty_scale = 7.5
+    distX_offset = 0.04
+    max_episode_length = 500
+
+    # compute the reward after this state
+    reward, above_hammer_reward, gripper_to_hammer_reward, gripper_downward_reward, gripper_hammer_y_reward, hammer_lift_reward, both_side_reward, two_finger_dist_reward = \
+        compute_franka_reward(
+            u, device,
+            hammer_pose, None, None,
+            franka_lfinger_pos, franka_lfinger_rot, franka_rfinger_pos, franka_rfinger_rot, down_dir,
+            num_envs, dist_reward_scale, rot_reward_scale, around_handle_reward_scale, open_reward_scale,
+            finger_dist_reward_scale, action_penalty_scale, distX_offset, max_episode_length
+        )
+
+    rewards.append(float(reward.squeeze().cpu().numpy()))
+    gripper_hammer_dir_rewards.append(above_hammer_reward.squeeze().cpu().numpy())
+    gripper_hammer_dis_rewards.append(gripper_to_hammer_reward.squeeze().cpu().numpy())
+    gripper_down_rewards.append(gripper_downward_reward.squeeze().cpu().numpy())
+    gripper_hammer_y_rewards.append(gripper_hammer_y_reward.squeeze().cpu().numpy())
+    hammer_lift_rewards.append(hammer_lift_reward.squeeze().cpu().numpy())
+    both_side_rewards.append(both_side_reward.squeeze().cpu().numpy())
+    two_finger_dist_rewards.append(two_finger_dist_reward.squeeze().cpu().numpy())
+
+    itr += 1
+    print(itr)
+
+    if itr >= 200:
+        break
+
+plt.plot(range(199), rewards[1:])
+plt.xlabel('Iteration')
+plt.ylabel('Mean Reward')
+plt.savefig("reward_plot.png")
+plt.clf()
+
+plt.plot(range(199), gripper_hammer_dir_rewards[1:])
+plt.xlabel('Iteration')
+plt.ylabel('Gripper Hammer dir Reward')
+plt.savefig("gripper_hammer_dir_plot.png")
+plt.clf()
+
+plt.plot(range(199), gripper_hammer_dis_rewards[1:])
+plt.xlabel('Iteration')
+plt.ylabel('Gripper Hammer dis Reward')
+plt.savefig("gripper_hammer_dis_plot.png")
+plt.clf()
+
+plt.plot(range(199), gripper_down_rewards[1:])
+plt.xlabel('Iteration')
+plt.ylabel('Gripper Downward Reward')
+plt.savefig("gripper_down_plot.png")
+plt.clf()
+
+plt.plot(range(199), gripper_hammer_y_rewards[1:])
+plt.xlabel('Iteration')
+plt.ylabel('Gripper Y Reward')
+plt.savefig("gripper_y_plot.png")
+plt.clf()
+
+plt.plot(range(199), hammer_lift_rewards[1:])
+plt.xlabel('Iteration')
+plt.ylabel('Hammer lift Reward')
+plt.savefig("hammer_lift_plot.png")
+plt.clf()
+
+plt.plot(range(199), both_side_rewards[1:])
+plt.xlabel('Iteration')
+plt.ylabel('Both Side Reward')
+plt.savefig("both_side_plot.png")
+plt.clf()
+
+plt.plot(range(199), two_finger_dist_rewards[1:])
+plt.xlabel('Iteration')
+plt.ylabel('Two finger dist Reward')
+plt.savefig("two_finger_dist_plot.png")
+plt.clf()
 
 # cleanup
 gym.destroy_viewer(viewer)

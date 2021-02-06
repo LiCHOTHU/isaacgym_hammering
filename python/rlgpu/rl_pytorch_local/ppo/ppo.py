@@ -82,6 +82,8 @@ class PPO:
 
         # save fig
         self.mean_reward = []
+        self.value_loss = []
+        self.iters = []
 
 
     def test(self, path):
@@ -178,13 +180,15 @@ class PPO:
             self.save(os.path.join(self.log_dir, 'model_{}.pt'.format(num_learning_iterations)))
 
     def save_fig(self, locs, it, log_interval):
+        self.iters.append(it)
+        self.value_loss.append(locs['mean_value_loss'])
         if len(locs['rewbuffer']) > 0:
             self.mean_reward.append(statistics.mean(locs['rewbuffer']))
         else:
             self.mean_reward.append(locs['mean_reward'])
 
         if it % (log_interval * 5) == 1:
-            plt.plot(self.mean_reward)
+            plt.plot(self.iters, self.mean_reward)
             plt.xlabel('Iteration')
             plt.ylabel('Mean Reward')
             plt.savefig(os.path.join(self.log_dir, "training_plot.png"))

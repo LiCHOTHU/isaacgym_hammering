@@ -145,6 +145,8 @@ default_dof_state["pos"] = default_dof_pos
 franka_link_dict = gym.get_asset_rigid_body_dict(franka_asset)
 franka_hand_index = franka_link_dict["panda_hand"]
 
+
+
 # configure env grid
 num_envs = 64
 num_per_row = int(math.sqrt(num_envs))

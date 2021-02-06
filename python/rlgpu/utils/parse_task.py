@@ -12,6 +12,7 @@ from rlgpu.tasks.ant import Ant
 from rlgpu.tasks.humanoid import Humanoid
 from rlgpu.tasks.franka import FrankaCabinet
 from rlgpu.tasks.shadow_hand import ShadowHand
+from rlgpu.tasks.franka_grasp import FrankaGrasp
 from rlgpu.tasks.franka_hammer import FrankaHammer
 from rlgpu.tasks.base.vec_task import VecTaskCPU, VecTaskGPU, VecTaskPython
 

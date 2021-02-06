@@ -49,6 +49,8 @@ def retrieve_cfg(args, use_rlg_config=False):
             return os.path.join(args.logdir, "franka_cabinet"), "cfg/train/rlg_franka_cabinet.yaml", "cfg/franka_cabinet.yaml"
         elif args.task == "ShadowHand":
             return os.path.join(args.logdir, "shadow_hand"), "cfg/train/rlg_shadow_hand.yaml", "cfg/shadow_hand.yaml"
+        elif args.task == "FrankaGrasp":
+            return os.path.join(args.logdir, "franka_grasp"), "cfg/train/rlg_franka_grasp.yaml", "cfg/franka_grasp.yaml"
         elif args.task == "FrankaHammer":
             return os.path.join(args.logdir, "franka_hammer"), "cfg/train/rlg_franka_hammer.yaml", "cfg/franka_hammer.yaml"
         else:
@@ -68,6 +70,8 @@ def retrieve_cfg(args, use_rlg_config=False):
             return os.path.join(args.logdir, "franka_cabinet"), "cfg/train/pytorch_ppo_franka_cabinet.yaml", "cfg/franka_cabinet.yaml"
         elif args.task == "ShadowHand":
             return os.path.join(args.logdir, "shadow_hand"), "cfg/train/pytorch_ppo_shadow_hand.yaml", "cfg/shadow_hand.yaml"
+        elif args.task == "FrankaGrasp":
+            return os.path.join(args.logdir, "franka_grasp"), "cfg/train/pytorch_ppo_franka_grasp.yaml", "cfg/franka_grasp.yaml"
         elif args.task == "FrankaHammer":
             return os.path.join(args.logdir, "franka_hammer"), "cfg/train/pytorch_ppo_franka_hammer.yaml", "cfg/franka_hammer.yaml"
         else:

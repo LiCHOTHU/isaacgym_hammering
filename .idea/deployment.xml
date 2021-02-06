@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="v:vector" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="v:vector">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/repo/rl" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/python/rlgpu/logs" />
+            <excludedPath local="true" path="$PROJECT_DIR$/docs" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
