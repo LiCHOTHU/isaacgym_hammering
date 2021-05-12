@@ -14,6 +14,7 @@ from rlgpu.tasks.franka import FrankaCabinet
 from rlgpu.tasks.shadow_hand import ShadowHand
 from rlgpu.tasks.franka_grasp import FrankaGrasp
 from rlgpu.tasks.franka_hammer import FrankaHammer
+from rlgpu.tasks.franka_push import FrankaPush
 from rlgpu.tasks.base.vec_task import VecTaskCPU, VecTaskGPU, VecTaskPython
 
 from isaacgym import rlgpu

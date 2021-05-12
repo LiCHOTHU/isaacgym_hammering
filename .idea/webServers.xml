@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="295af5d5-de37-4d3b-ace4-bf255b9014ab" name="v:vector" url="http://v.vectorinstitute.ai">
-        <fileTransfer rootFolder="/scratch/ssd001/home/lichothu" accessType="SFTP" host="v.vectorinstitute.ai" port="22" sshConfigId="a4cf1600-995b-43e4-b5db-5a01d8e09688" sshConfig="lichothu@v.vectorinstitute.ai:22 password">
+        <fileTransfer rootFolder="/scratch/ssd002/home/lichothu" accessType="SFTP" host="v.vectorinstitute.ai" port="22" sshConfigId="a4cf1600-995b-43e4-b5db-5a01d8e09688" sshConfig="lichothu@v.vectorinstitute.ai:22 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

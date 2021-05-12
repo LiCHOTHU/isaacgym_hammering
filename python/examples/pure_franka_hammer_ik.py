@@ -69,6 +69,8 @@ sim_params.gravity = gymapi.Vec3(0.0, 0.0, -9.8)
 sim_params.dt = 1.0 / 60.0
 sim_params.substeps = 2
 sim_params.use_gpu_pipeline = args.physx_gpu
+
+
 if args.physics_engine == gymapi.SIM_PHYSX:
     sim_params.physx.solver_type = 1
     sim_params.physx.num_position_iterations = 8
@@ -97,6 +99,7 @@ if viewer is None:
     raise Exception("Failed to create viewer")
 
 asset_root = "../../assets"
+
 
 # create table asset
 table_dims = gymapi.Vec3(0.6, 1.0, 0.4)
@@ -201,7 +204,7 @@ for i in range(num_envs):
     box_pose.p.y = table_pose.p.y - 0.1
     box_pose.p.z = table_dims.z + 0.5 * box_size
     box_pose.r = gymapi.Quat.from_axis_angle(gymapi.Vec3(0, 0, 1), np.random.uniform(-math.pi, math.pi))
-    box_pose.r = gymapi.Quat.from_axis_angle(gymapi.Vec3(0, 0, 1), -math.pi / 2)
+    box_pose.r = gymapi.Quat.from_axis_angle(gymapi.Vec3(0, 0, 1), -math.pi)
     box_handle = gym.create_actor(env, box_asset, box_pose, "box", i, 0)
     color = gymapi.Vec3(np.random.uniform(0, 1), np.random.uniform(0, 1), np.random.uniform(0, 1))
     gym.set_rigid_body_color(env, box_handle, 0, gymapi.MESH_VISUAL_AND_COLLISION, color)
@@ -316,8 +319,28 @@ while not gym.query_viewer_has_closed(viewer):
     box_pos = rb_states[box_idxs, :3]
     box_rot = rb_states[box_idxs, 3:7]
 
-    box_pos[:, 1] -= 0.07
-    box_pos[:, 0] -= 0.005
+    box_pos += 0.5
+
+    # box_pos[:, 1] -= 0.07
+    # box_pos[:, 0] -= 0.005
+
+    # TODO Add lines to indicate the position
+    '''
+    gym.clear_lines(viewer)
+    p0 = box_pos[0].cpu().numpy()
+    px = (box_pos[0] + quat_apply(box_rot[0], to_torch([1, 0, 0], device=device) * 1)).cpu().numpy() - p0
+    py = (box_pos[0] + quat_apply(box_rot[0], to_torch([0, 1, 0], device=device) * 1)).cpu().numpy() - p0
+    pz = (box_pos[0] + quat_apply(box_rot[0], to_torch([0, 0, 1], device=device) * 1)).cpu().numpy() - p0
+
+    x = -0.073
+    y = -0.073
+    z = 0.005
+
+    p_new = p0 + x * px + y * py + z * pz
+
+    gym.add_lines(viewer, envs[0], 4, [p0[0], p0[1], p0[2], p_new[0], p_new[1], p_new[2]], [0.85, 0.1, 0.1])
+    '''
+
 
     hand_pos = rb_states[hand_idxs, :3]
     hand_rot = rb_states[hand_idxs, 3:7]
@@ -390,12 +413,9 @@ while not gym.query_viewer_has_closed(viewer):
     gym.draw_viewer(viewer, sim, False)
     gym.sync_frame_time(sim)
 
-    if box_pos[:, 2] > 0.6:
-        import pdb; pdb.set_trace()
-
-
     itr += 1
     print(itr)
+
 
 
 # cleanup

@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<robot name="hammer">
+  <link name="hammer">
+    <inertial>
+      <mass value=".25"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+    </inertial>
+    <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="hammer/head0.obj"/>
+      </geometry>
+      <material name="metal">
+      <texture filename="./hammer/metal.png" />
+        </material>
+      </visual>
+      <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="hammer/handle0.obj"/>
+      </geometry>
+      <material name="wood">
+      <texture filename="./hammer/wood.png" />
+        </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="hammer/head0.obj"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="hammer/handle0.obj"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>

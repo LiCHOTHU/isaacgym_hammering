@@ -243,14 +243,9 @@ class FrankaHammer(BaseTask):
         box_right_pose = gymapi.Transform()
         peg_pose = gymapi.Transform()
 
-        # create camera properties
-        camera_props = gymapi.CameraProperties()
-        camera_props.horizontal_fov = 75.0
-        camera_props.width = 128
-        camera_props.height = 128
-
         self.frankas = []
         self.hammers = []
+        self.cameras = []
 
         self.hand_idxs = []
         self.hammer_idxs = []
@@ -265,6 +260,7 @@ class FrankaHammer(BaseTask):
 
         self.hammer_init_state = []
         self.peg_init_state = []
+        self.camera_tensors = []
 
 
         self.default_prop_states = []
@@ -382,7 +378,7 @@ class FrankaHammer(BaseTask):
             peg_idx = self.gym.get_actor_rigid_body_index(env_ptr, peg_actor, 0, gymapi.DOMAIN_SIM)
             self.peg_idxs.append(peg_idx)
 
-            # get hammer actor index
+            # get peg actor index
             peg_actor_idx = self.gym.get_actor_index(env_ptr, peg_actor, gymapi.DOMAIN_SIM)
             self.peg_actor_idxs.append(peg_actor_idx)
 
@@ -390,17 +386,33 @@ class FrankaHammer(BaseTask):
                                                peg_pose.r.x, peg_pose.r.y, peg_pose.r.z, peg_pose.r.w,
                                                0, 0, 0, 0, 0, 0])
 
+            '''
+            # add camera
+            camera_props = gymapi.CameraProperties()
+            camera_props.horizontal_fov = 75.0
+            camera_props.width = 128
+            camera_props.height = 128
 
-            # set camera
-            # camera_handle = self.gym.create_camera_sensor(env_ptr, camera_props)
-            # transform = gymapi.Transform()
-            # transform.p = hammer_pose.p
-            # transform.p.z += 0.5 # set the camera to be above the hammer
-            # transform.r = gymapi.Quat.from_axis_angle(gymapi.Vec3(0,0,1), np.radians(180.0))
-            # self.gym.set_camera_transform(camera_handle, env_ptr, transform)
+            camera_props.enable_tensors = True
+            camera_handle = self.gym.create_camera_sensor(env_ptr, camera_props)
+
+            transform = gymapi.Transform()
+            transform.p = hammer_pose.p
+            transform.p.z += 0.5 # set the camera to be above the hammer
+            transform.r = gymapi.Quat.from_axis_angle(gymapi.Vec3(0,0,1), np.radians(180.0))
+
+            self.gym.set_camera_transform(camera_handle, env_ptr, transform)
+
+            # obtain camera tensor
+            camera_tensor = self.gym.get_camera_image_gpu_tensor(self.sim, env_ptr, camera_handle, gymapi.IMAGE_COLOR)
+
+            torch_camera_tensor = gymtorch.wrap_tensor(camera_tensor)
+
+            self.camera_tensors.append(torch_camera_tensor)
 
             # self.gym.write_camera_image_to_file(self.sim, env_ptr, camera_handle, gymapi.IMAGE_COLOR, "test_image.png")
             # self.cameras.append(camera_handle)
+            '''
 
             self.envs.append(env_ptr)
             self.frankas.append(franka_actor)
@@ -477,6 +489,9 @@ class FrankaHammer(BaseTask):
         self.gym.refresh_actor_root_state_tensor(self.sim)
         self.gym.refresh_dof_state_tensor(self.sim)
         self.gym.refresh_rigid_body_state_tensor(self.sim)
+
+        self.gym.render_all_camera_sensors(self.sim)
+        self.gym.start_access_image_tensors(self.sim)
 
         self.hand_pos = self.rigid_body_states[:, self.hand_handle][:, 0:3]
         self.hand_rot = self.rigid_body_states[:, self.hand_handle][:, 3:7]
@@ -720,13 +735,65 @@ class FrankaHammer(BaseTask):
             self.gym.add_lines(self.viewer, self.envs[i], 9, [p0[0], p0[1], p0[2], p1[0], p1[1], p1[2]], [1, 0, 0])  # red
         '''
 
+        hammer_rot = self.hammer_rot
+
+        x_axis = to_torch([1, 0, 0]).repeat(self.num_envs, 1)
+        y_axis = to_torch([0, 1, 0]).repeat(self.num_envs, 1)
+        z_axis = to_torch([0, 0, 1]).repeat(self.num_envs, 1)
+
+        p0 = self.hammer_pos
+        px = (self.hammer_pos + quat_apply(hammer_rot, x_axis)) - p0
+        py = (self.hammer_pos + quat_apply(hammer_rot, y_axis)) - p0
+        pz = (self.hammer_pos + quat_apply(hammer_rot, z_axis)) - p0
+
+        x = -0.073
+        y = -0.073
+        z = 0.005
+
+        strike_pos = p0 + x * px + y * py + z * pz
+
         # debug viz
-        # self.debug_viz = True
+        self.debug_viz = False
         if self.viewer and self.debug_viz:
             self.gym.clear_lines(self.viewer)
             self.gym.refresh_rigid_body_state_tensor(self.sim)
 
             for i in range(self.num_envs):
+                '''
+                px = (self.hammer_pos[i] + quat_apply(self.hammer_rot[i],
+                                                      to_torch([1, 0, 0], device=self.device) * 0.2)).cpu().numpy()
+                py = (self.hammer_pos[i] + quat_apply(self.hammer_rot[i],
+                                                      to_torch([0, 1, 0], device=self.device) * 0.2)).cpu().numpy()
+                pz = (self.hammer_pos[i] + quat_apply(self.hammer_rot[i],
+                                                      to_torch([0, 0, 1], device=self.device) * 0.2)).cpu().numpy()
+
+                p0 = self.hammer_pos[i].cpu().numpy()
+
+                p_new = px + py + pz
+
+                self.gym.add_lines(self.viewer, self.envs[i], 9, [p0[0], p0[1], p0[2], p_new[0], p_new[1], p_new[2]],
+                                   [0.85, 0.1, 0.1])
+                '''
+
+                px = (strike_pos[i] + quat_apply(self.hammer_rot[i],
+                                                   to_torch([1, 0, 0], device=self.device) * 0.2)).cpu().numpy()
+                py = (strike_pos[i] + quat_apply(self.hammer_rot[i],
+                                                   to_torch([0, -1, 0], device=self.device) * 0.2)).cpu().numpy()
+                pz = (strike_pos[i] + quat_apply(self.hammer_rot[i],
+                                                   to_torch([0, 0, 1], device=self.device) * 0.2)).cpu().numpy()
+
+                p0 = strike_pos[i].cpu().numpy()
+                self.gym.add_lines(self.viewer, self.envs[i], 9, [p0[0], p0[1], p0[2], px[0], px[1], px[2]],
+                                   [0.85, 0.1, 0.1])
+                self.gym.add_lines(self.viewer, self.envs[i], 9, [p0[0], p0[1], p0[2], py[0], py[1], py[2]],
+                                   [0.1, 0.85, 0.1])
+                self.gym.add_lines(self.viewer, self.envs[i], 9, [p0[0], p0[1], p0[2], pz[0], pz[1], pz[2]],
+                                   [0.1, 0.1, 0.85])
+
+
+
+
+                '''
                 px = (self.peg_pos[i] + quat_apply(self.peg_rot[i], to_torch([1, 0, 0], device=self.device) * 0.2)).cpu().numpy()
                 py = (self.peg_pos[i] + quat_apply(self.peg_rot[i], to_torch([0, 1, 0], device=self.device) * 0.2)).cpu().numpy()
                 pz = (self.peg_pos[i] + quat_apply(self.peg_rot[i], to_torch([0, 0, 1], device=self.device) * 0.2)).cpu().numpy()
@@ -735,7 +802,7 @@ class FrankaHammer(BaseTask):
                 self.gym.add_lines(self.viewer, self.envs[i], 4, [p0[0], p0[1], p0[2], px[0], px[1], px[2]], [0.85, 0.1, 0.1])
                 self.gym.add_lines(self.viewer, self.envs[i], 4, [p0[0], p0[1], p0[2], py[0], py[1], py[2]], [0.1, 0.85, 0.1])
                 self.gym.add_lines(self.viewer, self.envs[i], 4, [p0[0], p0[1], p0[2], pz[0], pz[1], pz[2]], [0.1, 0.1, 0.85])
-
+                
 
                 px = (self.hammer_pos[i] + quat_apply(self.hammer_rot[i], to_torch([1, 0, 0], device=self.device) * 0.2)).cpu().numpy()
                 py = (self.hammer_pos[i] + quat_apply(self.hammer_rot[i], to_torch([0, 1, 0], device=self.device) * 0.2)).cpu().numpy()
@@ -763,7 +830,7 @@ class FrankaHammer(BaseTask):
                 self.gym.add_lines(self.viewer, self.envs[i], 4, [p0[0], p0[1], p0[2], px[0], px[1], px[2]], [1, 0, 0])
                 self.gym.add_lines(self.viewer, self.envs[i], 4, [p0[0], p0[1], p0[2], py[0], py[1], py[2]], [0, 1, 0])
                 self.gym.add_lines(self.viewer, self.envs[i], 4, [p0[0], p0[1], p0[2], pz[0], pz[1], pz[2]], [0, 0, 1])
-
+                '''
 #####################################################################
 ###=========================jit functions=========================###
 #####################################################################
@@ -901,23 +968,58 @@ def compute_franka_reward(
     peg_pos = peg_pose[:, :3]
     peg_init_pos = peg_init_state[:, :3]
 
-    hammer_peg_weight = 10.0
-    peg_dist_weight = 100.0
 
-    # add penalty for dropping off the table
-    hammer_drop_table = (hammer_pos[:, 2] < 0.5).float().squeeze()
-    hammer_drop_penalty = -10 * hammer_drop_table
+    hammer_rot = hammer_pose[:, 3:7]
+
+    x_axis = to_torch([1, 0, 0]).repeat(num_envs, 1)
+    y_axis = to_torch([0, 1, 0]).repeat(num_envs, 1)
+    z_axis = to_torch([0, 0, 1]).repeat(num_envs, 1)
+
+    p0 = hammer_pos
+    px = (hammer_pos + quat_apply(hammer_rot, x_axis)) - p0
+    py = (hammer_pos + quat_apply(hammer_rot, y_axis)) - p0
+    pz = (hammer_pos + quat_apply(hammer_rot, z_axis)) - p0
+
+    x = -0.073
+    y = -0.073
+    z = 0.005
+
+    strike_pos = p0 + x * px + y * py + z * pz
+    strike_dir = (strike_pos + quat_apply(hammer_rot, -y_axis)) - strike_pos
+
+    hammer_peg_weight = 1.0
+    peg_dist_weight = 10.0
+    hammer_dir_weight = 0.5
+    hammer_drop_penalty_weight = 5.0
+
+    # add penalty for dropping off the table or dropping from hand
+    finger_pos = (franka_lfinger_pos + franka_rfinger_pos) / 2.0
+    finger_hammer_dist = torch.norm(finger_pos - hammer_pos, dim=-1).unsqueeze(-1)
+
+    hammer_drop_finger = (finger_hammer_dist > 0.06).squeeze()
+    hammer_drop_table = (hammer_pos[:, 2] < 0.5).squeeze()
+
+    hammer_drop = (hammer_drop_finger | hammer_drop_table).float()
+
+    hammer_drop_penalty = -hammer_drop_penalty_weight * hammer_drop
     rewards = hammer_drop_penalty
 
+
     # add reward for distance between peg and hammer
-    hammer_to_peg = hammer_pos - peg_pos
+    hammer_to_peg = strike_pos - peg_pos
     hammer_peg_dist = torch.norm(hammer_to_peg, dim=-1).unsqueeze(-1)
 
     hammer_peg_reward = ((1.0 - torch.tanh(hammer_peg_dist)) * hammer_peg_weight).squeeze()
     rewards += hammer_peg_reward
 
+    # add reward for strike direction alignment
+    strike_dir = (strike_pos + quat_apply(hammer_rot, -y_axis)) - strike_pos
+    strike_x_dot = torch.bmm(strike_dir.view(num_envs, 1, 3), -x_axis.view(num_envs, 3, 1)).squeeze()
+
+    rewards += strike_x_dot * hammer_dir_weight
+
     # add reward for distance peg goes in
-    hammer_close_peg = (hammer_peg_dist < 0.1).float().squeeze()
+    hammer_close_peg = (hammer_peg_dist < 0.05).float().squeeze()
     peg_dist = torch.norm(peg_pos - peg_init_pos, dim=-1).squeeze()
     peg_dist_reward = torch.tanh(peg_dist) * hammer_close_peg * peg_dist_weight
 
@@ -926,7 +1028,6 @@ def compute_franka_reward(
     # regularization on the actions (summed for each environment)
     action_penalty = torch.sum(actions ** 2, dim=-1)
     rewards -= action_penalty_scale * action_penalty
-
 
     # TODO Compute the grasping reward
     reset_buf = torch.where(franka_lfinger_pos[:, 0] < hammer_pose[:, 0] - distX_offset,
