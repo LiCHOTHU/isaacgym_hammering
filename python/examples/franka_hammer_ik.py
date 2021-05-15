@@ -219,12 +219,17 @@ box_dims = gymapi.Vec3(0.04, 0.04, 0.04)
 asset_options = gymapi.AssetOptions()
 box_asset = gym.create_box(sim, box_dims.x, box_dims.y, box_dims.z, asset_options)
 
-
+'''
 # create hammer asset
 box_asset_file = "urdf/hammer_convex.urdf"
 asset_options = gymapi.AssetOptions()
 box_size = 0.035
 box_asset = gym.load_asset(sim, asset_root, box_asset_file, asset_options)
+'''
+
+box_size = 0.06
+asset_options = gymapi.AssetOptions()
+box_asset = gym.create_box(sim, box_size, box_size, box_size * 2, asset_options)
 
 # load franka asset
 franka_asset_file = "urdf/franka_description/robots/franka_panda.urdf"
@@ -277,10 +282,11 @@ env_upper = gymapi.Vec3(spacing, spacing, spacing)
 print("Creating %d environments" % num_envs)
 
 franka_pose = gymapi.Transform()
-franka_pose.p = gymapi.Vec3(0, 0, 0)
+franka_pose.p = gymapi.Vec3(0, 0, 0.1)
+franka_pose.r = gymapi.Quat(0.0, 0.0, 1.0, 0.0)
 
 table_pose = gymapi.Transform()
-table_pose.p = gymapi.Vec3(0.5, 0.0, 0.5 * table_dims.z)
+table_pose.p = gymapi.Vec3(-0.5, 0.0, 0.5 * table_dims.z)
 
 box_pose = gymapi.Transform()
 
@@ -305,10 +311,10 @@ for i in range(num_envs):
     table_handle = gym.create_actor(env, table_asset, table_pose, "table", i, 0)
 
     # add box
-    box_pose.p.x = table_pose.p.x + np.random.uniform(-0.1, 0.1)
-    box_pose.p.y = table_pose.p.y + np.random.uniform(-0.2, 0.2)
-    box_pose.p.z = table_dims.z + 0.5 * box_size
-    box_pose.r = gymapi.Quat.from_axis_angle(gymapi.Vec3(0, 0, 1), np.random.uniform(-math.pi, math.pi))
+    box_pose.p.x = table_pose.p.x
+    box_pose.p.y = table_pose.p.y
+    box_pose.p.z = table_dims.z + box_size
+    box_pose.r = gymapi.Quat.from_axis_angle(gymapi.Vec3(0, 0, 1), 0)
     box_handle = gym.create_actor(env, box_asset, box_pose, "box", i, 0)
     color = gymapi.Vec3(np.random.uniform(0, 1), np.random.uniform(0, 1), np.random.uniform(0, 1))
     gym.set_rigid_body_color(env, box_handle, 0, gymapi.MESH_VISUAL_AND_COLLISION, color)
@@ -453,7 +459,7 @@ while not gym.query_viewer_has_closed(viewer):
 
     # determine if we're holding the box (grippers are closed and box is near)
     gripper_sep = dof_pos[:, 7] + dof_pos[:, 8]
-    gripped = (gripper_sep < box_size) & (box_dist < grasp_offset + 0.5 * box_size)
+    gripped = (gripper_sep < box_size) & (box_dist < grasp_offset + box_size)
 
     yaw_q = cube_grasping_yaw(box_rot, corners)
     box_yaw_dir = quat_axis(yaw_q, 0)
@@ -470,7 +476,7 @@ while not gym.query_viewer_has_closed(viewer):
     # otherwise, seek a position above the box
     above_box = ((box_dot >= 0.99) & (yaw_dot >= 0.95) & (box_dist < grasp_offset * 3)).squeeze(-1)
     grasp_pos = box_pos.clone()
-    grasp_pos[:, 2] = torch.where(above_box, box_pos[:, 2] + grasp_offset, box_pos[:, 2] + grasp_offset * 2.5)
+    grasp_pos[:, 2] = torch.where(above_box, box_pos[:, 2] + grasp_offset + box_size * 0.5, box_pos[:, 2] + grasp_offset * 2.5 + box_size * 0.5)
 
     # compute goal position and orientation
     goal_pos = torch.where(return_to_start, init_pos, grasp_pos)
@@ -491,7 +497,7 @@ while not gym.query_viewer_has_closed(viewer):
     pos_target = dof_pos + u
 
     # gripper actions depend on distance between hand and box
-    close_gripper = (box_dist < grasp_offset + 0.02) | gripped
+    close_gripper = (box_dist < grasp_offset + 0.025) | gripped
     # always open the gripper above a certain height, dropping the box and restarting from the beginning
     hand_restart = hand_restart | (box_pos[:, 2] > 0.7)
     keep_going = torch.logical_not(hand_restart)
@@ -506,6 +512,10 @@ while not gym.query_viewer_has_closed(viewer):
     gym.step_graphics(sim)
     gym.draw_viewer(viewer, sim, False)
     gym.sync_frame_time(sim)
+
+    print("pos: ", pos_target)
+    print("box_pos: ", box_pos)
+    print("box_rot: ", box_rot)
 
     # check reward plot
     down_dir = torch.Tensor([0, 0, -1]).to(device).view(1, 3)
@@ -540,9 +550,7 @@ while not gym.query_viewer_has_closed(viewer):
     itr += 1
     print(itr)
 
-    if itr >= 200:
-        break
-
+'''
 plt.plot(range(199), rewards[1:])
 plt.xlabel('Iteration')
 plt.ylabel('Mean Reward')
@@ -591,6 +599,7 @@ plt.ylabel('Two finger dist Reward')
 plt.savefig("two_finger_dist_plot.png")
 plt.clf()
 
+'''
 # cleanup
 gym.destroy_viewer(viewer)
 gym.destroy_sim(sim)

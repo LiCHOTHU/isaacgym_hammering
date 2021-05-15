@@ -55,6 +55,8 @@ def retrieve_cfg(args, use_rlg_config=False):
             return os.path.join(args.logdir, "franka_hammer"), "cfg/train/rlg_franka_hammer.yaml", "cfg/franka_hammer.yaml"
         elif args.task == "FrankaPush":
             return os.path.join(args.logdir, "franka_push"), "cfg/train/rlg_franka_push.yaml", "cfg/franka_push.yaml"
+        elif args.task == "FrankaInsert":
+            return os.path.join(args.logdir, "franka_insert"), "cfg/train/rlg_franka_insert.yaml", "cfg/franka_insert.yaml"
         else:
             warn_task_name()
     else:
@@ -78,6 +80,8 @@ def retrieve_cfg(args, use_rlg_config=False):
             return os.path.join(args.logdir, "franka_hammer"), "cfg/train/pytorch_ppo_franka_hammer.yaml", "cfg/franka_hammer.yaml"
         elif args.task == "FrankaPush":
             return os.path.join(args.logdir, "franka_push"), "cfg/train/pytorch_ppo_franka_push.yaml", "cfg/franka_push.yaml"
+        elif args.task == "FrankaInsert":
+            return os.path.join(args.logdir, "franka_insert"), "cfg/train/pytorch_ppo_franka_insert.yaml", "cfg/franka_insert.yaml"
         else:
             warn_task_name()
 

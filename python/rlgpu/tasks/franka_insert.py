@@ -16,7 +16,7 @@ from isaacgym import gymtorch
 from isaacgym import gymapi
 
 
-class FrankaPush(BaseTask):
+class FrankaInsert(BaseTask):
 
     def __init__(self, cfg, sim_params, physics_engine, graphics_device, device):
         self.cfg = cfg
@@ -44,7 +44,8 @@ class FrankaPush(BaseTask):
 
         self.distX_offset = 0.04
         self.dt = 1 / 60.
-        self.box_size = self.cfg["env"]["boxSize"]
+
+
 
         # prop dimensions
         self.prop_width = 0.08
@@ -73,7 +74,8 @@ class FrankaPush(BaseTask):
         self.gym.refresh_rigid_body_state_tensor(self.sim)
 
         # create some wrapper tensors for different slices
-        self.franka_default_dof_pos = to_torch([1.157, -1.066, -0.155, -2.239, -1.841, 1.003, 0.469, 0.035, 0.035],
+        # this default pos is pre-calculated for grasping
+        self.franka_default_dof_pos = to_torch([0.8306, -0.2572, -0.7640, -2.1175, -0.1887, 1.9239, -2.2056, 0.000, 0.000],
                                                device=self.device)
         self.dof_state = gymtorch.wrap_tensor(dof_state_tensor)
         self.franka_dof_state = self.dof_state.view(self.num_envs, -1, 2)[:, :self.num_franka_dofs]
@@ -147,12 +149,38 @@ class FrankaPush(BaseTask):
         asset_options.fix_base_link = True
         table_asset = self.gym.create_box(self.sim, table_dims.x, table_dims.y, table_dims.z, asset_options)
 
-        # create a box to push
-        box_dims = gymapi.Vec3(self.box_size, self.box_size, self.box_size)
+        # create a box to insert
+        box_dims = gymapi.Vec3(0.06, 0.06, 0.12)
         asset_options = gymapi.AssetOptions()
         asset_options.density = 2000
         asset_options.fix_base_link = False
         box_asset = self.gym.create_box(self.sim, box_dims.x, box_dims.y, box_dims.z, asset_options)
+
+        # create a hole for insertion, composed of front, back, left, right
+        box_front_dims = gymapi.Vec3(0.04, 0.09, 0.04)
+        asset_options = gymapi.AssetOptions()
+        asset_options.fix_base_link = True
+        box_front_asset = self.gym.create_box(self.sim, box_front_dims.x, box_front_dims.y, box_front_dims.z,
+                                               asset_options)
+
+        box_back_dims = gymapi.Vec3(0.04, 0.09, 0.04)
+        asset_options = gymapi.AssetOptions()
+        asset_options.fix_base_link = True
+        box_back_asset = self.gym.create_box(self.sim, box_back_dims.x, box_back_dims.y, box_back_dims.z,
+                                            asset_options)
+
+        box_left_dims = gymapi.Vec3(0.17, 0.04, 0.04)
+        asset_options = gymapi.AssetOptions()
+        asset_options.fix_base_link = True
+        box_left_asset = self.gym.create_box(self.sim, box_left_dims.x, box_left_dims.y, box_left_dims.z,
+                                             asset_options)
+
+        box_right_dims = gymapi.Vec3(0.17, 0.04, 0.04)
+        asset_options = gymapi.AssetOptions()
+        asset_options.fix_base_link = True
+        box_right_asset = self.gym.create_box(self.sim, box_right_dims.x, box_right_dims.y, box_right_dims.z,
+                                              asset_options)
+
 
         self.num_franka_bodies = self.gym.get_asset_rigid_body_count(franka_asset)
         self.num_franka_dofs = self.gym.get_asset_dof_count(franka_asset)
@@ -201,6 +229,11 @@ class FrankaPush(BaseTask):
 
         box_pose = gymapi.Transform()
 
+        box_front_pose = gymapi.Transform()
+        box_back_pose = gymapi.Transform()
+        box_left_pose = gymapi.Transform()
+        box_right_pose = gymapi.Transform()
+
         self.frankas = []
         self.boxes = []
 
@@ -237,15 +270,16 @@ class FrankaPush(BaseTask):
             self.gym.set_rigid_body_color(env_ptr, table_handle, 0, gymapi.MESH_VISUAL_AND_COLLISION, color)
 
             # add box
-            box_pose.p.x = table_pose.p.x
-            box_pose.p.y = table_pose.p.y - 0.1 # offset position of the box
-            box_pose.p.z = table_dims.z + 0.5 * box_dims.z
-            box_pose.r = gymapi.Quat(0, 0, 0)
+            box_pose.p = gymapi.Vec3(-0.5001, -0.0002, 0.4600)
+            box_pose.r = gymapi.Quat( 0.0000, 0.0000, -0.0007, 1.0000)
             box_actor = self.gym.create_actor(env_ptr, box_asset, box_pose, "box", i, 0)
 
             # set the goal position here
+            self.goal_pos = gymapi.Vec3(-0.5, 0.0, table_dims.z + 0.5 * box_front_dims.z)
+            self.sub_goal_pos = gymapi.Vec3(-0.5, 0.0, table_dims.z + box_front_dims.z + 0.5 * box_dims.z)
 
-            self.goal = to_torch([box_pose.p.x, box_pose.p.y - self.pushDist]).repeat(self.num_envs, 1)
+            self.goal = to_torch([self.goal_pos.x, self.goal_pos.y, self.goal_pos.z]).repeat(self.num_envs, 1)
+            self.sub_goal = to_torch([self.sub_goal_pos.x, self.sub_goal_pos.y, self.sub_goal_pos.z]).repeat(self.num_envs, 1)
 
             # set the color of the box
             color = gymapi.Vec3(1, 0, 0)
@@ -267,8 +301,44 @@ class FrankaPush(BaseTask):
 
             # set box initial state
             self.box_init_state.append([box_pose.p.x, box_pose.p.y, box_pose.p.z,
-                                           box_pose.r.x, box_pose.r.y, box_pose.r.z, box_pose.r.w,
-                                           0, 0, 0, 0, 0, 0])
+                                        box_pose.r.x, box_pose.r.y, box_pose.r.z, box_pose.r.w,
+                                        0, 0, 0, 0, 0, 0])
+
+
+            # build a hole for the insertion
+            # add box to hold the peg
+            color = gymapi.Vec3(0.3, 0.2, 0.5)  # box color
+
+            # add box front
+            box_front_pose.p = gymapi.Vec3(self.goal_pos.x - 0.045 - 0.02, self.goal_pos.y, self.goal_pos.z)
+            box_front_pose.r = gymapi.Quat(0, 0, 0)
+            box_front_handle = self.gym.create_actor(env_ptr, box_front_asset, box_front_pose, "box_front", i, 0)
+
+            # add box back
+            box_back_pose.p = gymapi.Vec3(self.goal_pos.x + 0.045 + 0.02, self.goal_pos.y, self.goal_pos.z)
+            box_back_pose.r = gymapi.Quat(0, 0, 0)
+            box_back_handle = self.gym.create_actor(env_ptr, box_back_asset, box_back_pose, "box_back", i, 0)
+
+            # add box left
+            box_left_pose.p = gymapi.Vec3(self.goal_pos.x, self.goal_pos.y - 0.045 - 0.02, self.goal_pos.z)
+            box_left_pose.r = gymapi.Quat(0, 0, 0)
+            box_left_handle = self.gym.create_actor(env_ptr, box_left_asset, box_left_pose, "box_left", i, 0)
+
+            # add box right
+            box_right_pose.p = gymapi.Vec3(self.goal_pos.x, self.goal_pos.y + 0.045 + 0.02, self.goal_pos.z)
+            box_right_pose.r = gymapi.Quat(0, 0, 0)
+            box_right_handle = self.gym.create_actor(env_ptr, box_right_asset, box_right_pose, "box_right", i, 0)
+
+
+            self.gym.set_rigid_body_color(env_ptr, box_front_handle, 0, gymapi.MESH_VISUAL_AND_COLLISION,
+                                          color)  # box color
+            self.gym.set_rigid_body_color(env_ptr, box_back_handle, 0, gymapi.MESH_VISUAL_AND_COLLISION,
+                                          color)  # box color
+            self.gym.set_rigid_body_color(env_ptr, box_left_handle, 0, gymapi.MESH_VISUAL_AND_COLLISION,
+                                          color)  # box color
+            self.gym.set_rigid_body_color(env_ptr, box_right_handle, 0, gymapi.MESH_VISUAL_AND_COLLISION,
+                                          color)  # box color
+
 
             self.envs.append(env_ptr)
             self.frankas.append(franka_actor)
@@ -294,7 +364,7 @@ class FrankaPush(BaseTask):
     def compute_reward(self, actions):
         self.rew_buf[:], self.reset_buf[:] = compute_franka_reward(
             self.reset_buf, self.progress_buf, self.actions,
-            self.box_pose, self.box_init_state, self.goal, self.box_size,
+            self.box_pose, self.box_init_state, self.goal,
             self.franka_lfinger_pos, self.franka_lfinger_rot, self.franka_rfinger_pos, self.franka_rfinger_rot,
             self.hand_pos, self.hand_rot,
             self.down_dir,
@@ -337,7 +407,6 @@ class FrankaPush(BaseTask):
         # TODO current obs: (7dof+2gripper)*2 (pos+vel)(franka) + (3pos+4quat)(box) = 25
         self.obs_buf = torch.cat((dof_pos_scaled, self.franka_dof_vel * self.dof_vel_scale, self.box_pose), dim=-1)
 
-
         return self.obs_buf
 
     def reset(self, env_ids):
@@ -348,13 +417,8 @@ class FrankaPush(BaseTask):
                                                      gymtorch.unwrap_tensor(self.root_state_tensor),
                                                      gymtorch.unwrap_tensor(object_indices), len(object_indices))
 
-
         # reset franka
-        pos = tensor_clamp(
-            self.franka_default_dof_pos.unsqueeze(0) + 0.25 * (
-                        torch.rand((len(env_ids), self.num_franka_dofs), device=self.device) - 0.5),
-            self.franka_dof_lower_limits, self.franka_dof_upper_limits)
-
+        pos = self.franka_default_dof_pos
         self.franka_dof_pos[env_ids, :] = pos
         self.franka_dof_vel[env_ids, :] = torch.zeros_like(self.franka_dof_vel[env_ids])
         self.franka_dof_targets[env_ids, :self.num_franka_dofs] = pos
@@ -413,7 +477,6 @@ class FrankaPush(BaseTask):
             self.gym.add_lines(self.viewer, self.envs[i], 9, [p0[0], p0[1], p0[2], p1[0], p1[1], p1[2]], [1, 0, 0])  # red
         '''
 
-
         # debug viz
         self.debug_viz = False
         if self.viewer and self.debug_viz:
@@ -421,7 +484,7 @@ class FrankaPush(BaseTask):
             self.gym.refresh_rigid_body_state_tensor(self.sim)
             '''
             for i in range(self.num_envs):
-        
+
                 px = (self.hammer_pos[i] + quat_apply(self.hammer_rot[i],
                                                       to_torch([1, 0, 0], device=self.device) * 0.2)).cpu().numpy()
                 py = (self.hammer_pos[i] + quat_apply(self.hammer_rot[i],
@@ -482,23 +545,23 @@ class FrankaPush(BaseTask):
 
 def compute_franka_reward(
         reset_buf, progress_buf, actions,
-        box_pose, box_init_state, goal, box_size,
+        box_pose, box_init_state, goal,
         franka_lfinger_pos, franka_lfinger_rot, franka_rfinger_pos, franka_rfinger_rot,
         hand_pos, hand_rot,
         down_dir,
         num_envs,
         reward_scale, action_penalty_scale, distX_offset, max_episode_length
 ):
-
     # set some init data for calculation
     box_pos = box_pose[:, :3]
     box_init_pos = box_init_state[:, :3]
 
+    '''
     # reaching reward
     gripper_pos = (franka_lfinger_pos + franka_rfinger_pos) / 2.0
     reach_dist = torch.norm(gripper_pos - box_pos, dim=-1).unsqueeze(-1)
     zero = to_torch([0]).repeat(num_envs, 1)
-    reach_diff = torch.max(zero, reach_dist - 0.5 * box_size)
+    reach_diff = torch.max(zero, reach_dist)
 
     reach_reward = 1 - torch.tanh(10.0 * reach_diff)
     rewards = reach_reward.squeeze()
@@ -509,11 +572,10 @@ def compute_franka_reward(
     box_goal_reward = 1 - torch.tanh(10.0 * goal_dist)
 
     rewards += box_goal_reward.squeeze()
-
-
+    '''
     # regularization on the actions (summed for each environment)
     action_penalty = torch.sum(actions ** 2, dim=-1)
-    rewards -= action_penalty_scale * action_penalty
+    rewards = -action_penalty_scale * action_penalty
 
     # TODO Compute the grasping reward
     reset_buf = torch.where(franka_lfinger_pos[:, 0] < box_pose[:, 0] - distX_offset,
