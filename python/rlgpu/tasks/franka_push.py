@@ -237,8 +237,8 @@ class FrankaPush(BaseTask):
             self.gym.set_rigid_body_color(env_ptr, table_handle, 0, gymapi.MESH_VISUAL_AND_COLLISION, color)
 
             # add box
-            box_pose.p.x = table_pose.p.x
-            box_pose.p.y = table_pose.p.y - 0.1 # offset position of the box
+            box_pose.p.x = table_pose.p.x - 0.2
+            box_pose.p.y = table_pose.p.y  # offset position of the box
             box_pose.p.z = table_dims.z + 0.5 * box_dims.z
             box_pose.r = gymapi.Quat(0, 0, 0)
             box_actor = self.gym.create_actor(env_ptr, box_asset, box_pose, "box", i, 0)

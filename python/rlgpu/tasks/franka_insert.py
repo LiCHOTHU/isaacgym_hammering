@@ -301,8 +301,8 @@ class FrankaInsert(BaseTask):
 
             # set box initial state
             self.box_init_state.append([box_pose.p.x, box_pose.p.y, box_pose.p.z,
-                                        box_pose.r.x, box_pose.r.y, box_pose.r.z, box_pose.r.w,
-                                        0, 0, 0, 0, 0, 0])
+                                           box_pose.r.x, box_pose.r.y, box_pose.r.z, box_pose.r.w,
+                                           0, 0, 0, 0, 0, 0])
 
 
             # build a hole for the insertion
