@@ -245,7 +245,8 @@ class FrankaPush(BaseTask):
 
             # set the goal position here
 
-            self.goal = to_torch([box_pose.p.x, box_pose.p.y - self.pushDist]).repeat(self.num_envs, 1)
+            self.goal = to_torch([box_pose.p.x - self.pushDist, box_pose.p.y]).repeat(self.num_envs, 1)
+            self.sub_goal = to_torch([box_pose.p.x + box_dims.x * 0.7, box_pose.p.y, box_pose.p.z]).repeat(self.num_envs, 1)
 
             # set the color of the box
             color = gymapi.Vec3(1, 0, 0)
@@ -294,7 +295,7 @@ class FrankaPush(BaseTask):
     def compute_reward(self, actions):
         self.rew_buf[:], self.reset_buf[:] = compute_franka_reward(
             self.reset_buf, self.progress_buf, self.actions,
-            self.box_pose, self.box_init_state, self.goal, self.box_size,
+            self.box_pose, self.box_init_state, self.sub_goal, self.goal, self.box_size,
             self.franka_lfinger_pos, self.franka_lfinger_rot, self.franka_rfinger_pos, self.franka_rfinger_rot,
             self.hand_pos, self.hand_rot,
             self.down_dir,
@@ -337,7 +338,6 @@ class FrankaPush(BaseTask):
         # TODO current obs: (7dof+2gripper)*2 (pos+vel)(franka) + (3pos+4quat)(box) = 25
         self.obs_buf = torch.cat((dof_pos_scaled, self.franka_dof_vel * self.dof_vel_scale, self.box_pose), dim=-1)
 
-
         return self.obs_buf
 
     def reset(self, env_ids):
@@ -347,7 +347,6 @@ class FrankaPush(BaseTask):
         self.gym.set_actor_root_state_tensor_indexed(self.sim,
                                                      gymtorch.unwrap_tensor(self.root_state_tensor),
                                                      gymtorch.unwrap_tensor(object_indices), len(object_indices))
-
 
         # reset franka
         pos = tensor_clamp(
@@ -482,7 +481,7 @@ class FrankaPush(BaseTask):
 
 def compute_franka_reward(
         reset_buf, progress_buf, actions,
-        box_pose, box_init_state, goal, box_size,
+        box_pose, box_init_state, sub_goal, goal, box_size,
         franka_lfinger_pos, franka_lfinger_rot, franka_rfinger_pos, franka_rfinger_rot,
         hand_pos, hand_rot,
         down_dir,
@@ -494,19 +493,20 @@ def compute_franka_reward(
     box_pos = box_pose[:, :3]
     box_init_pos = box_init_state[:, :3]
 
-    # reaching reward
+    # reaching goal reward
     gripper_pos = (franka_lfinger_pos + franka_rfinger_pos) / 2.0
-    reach_dist = torch.norm(gripper_pos - box_pos, dim=-1).unsqueeze(-1)
+    reach_dist = torch.norm(gripper_pos - sub_goal, dim=-1).unsqueeze(-1)
     zero = to_torch([0]).repeat(num_envs, 1)
     reach_diff = torch.max(zero, reach_dist - 0.5 * box_size)
 
     reach_reward = 1 - torch.tanh(10.0 * reach_diff)
     rewards = reach_reward.squeeze()
 
+    # pushing reward
     box_pos_xy = box_pos[:, 0:2]
     goal_dist = torch.norm(goal - box_pos_xy, dim=-1).unsqueeze(-1)
 
-    box_goal_reward = 1 - torch.tanh(10.0 * goal_dist)
+    box_goal_reward = (1 - torch.tanh(10.0 * goal_dist)) * 5.0
 
     rewards += box_goal_reward.squeeze()
 

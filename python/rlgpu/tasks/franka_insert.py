@@ -151,7 +151,7 @@ class FrankaInsert(BaseTask):
         # create a box to insert
         box_dims = gymapi.Vec3(0.06, 0.06, 0.12)
         asset_options = gymapi.AssetOptions()
-        # asset_options.density = 2000
+        asset_options.density = 2000
         asset_options.fix_base_link = False
         box_asset = self.gym.create_box(self.sim, box_dims.x, box_dims.y, box_dims.z, asset_options)
 
@@ -250,6 +250,14 @@ class FrankaInsert(BaseTask):
         self.prop_start = []
         self.envs = []
 
+        # set the goal position here
+        self.goal_pos = gymapi.Vec3(-0.5, 0.0, table_dims.z + 0.5 * box_front_dims.z)
+        self.sub_goal_pos = gymapi.Vec3(-0.5, 0.0, table_dims.z + box_front_dims.z + 0.5 * box_dims.z)
+
+        self.goal = to_torch([self.goal_pos.x, self.goal_pos.y, self.goal_pos.z]).repeat(self.num_envs, 1)
+        self.sub_goal = to_torch([self.sub_goal_pos.x, self.sub_goal_pos.y, self.sub_goal_pos.z]).repeat(self.num_envs,
+                                                                                                         1)
+
         for i in range(self.num_envs):
             # create env instance
             env_ptr = self.gym.create_env(self.sim, lower, upper, num_per_row)
@@ -272,13 +280,6 @@ class FrankaInsert(BaseTask):
             box_pose.p = gymapi.Vec3(-0.4841, -0.0137, 0.5612)
             box_pose.r = gymapi.Quat(-0.0048, -0.0734, -0.1039, 0.9919)
             box_actor = self.gym.create_actor(env_ptr, box_asset, box_pose, "box", i, 0)
-
-            # set the goal position here
-            self.goal_pos = gymapi.Vec3(-0.5, 0.0, table_dims.z + 0.5 * box_front_dims.z)
-            self.sub_goal_pos = gymapi.Vec3(-0.5, 0.0, table_dims.z + box_front_dims.z + 0.5 * box_dims.z)
-
-            self.goal = to_torch([self.goal_pos.x, self.goal_pos.y, self.goal_pos.z]).repeat(self.num_envs, 1)
-            self.sub_goal = to_torch([self.sub_goal_pos.x, self.sub_goal_pos.y, self.sub_goal_pos.z]).repeat(self.num_envs, 1)
 
             # set the color of the box
             color = gymapi.Vec3(1, 0, 0)
@@ -361,8 +362,6 @@ class FrankaInsert(BaseTask):
         self.init_pos = torch.Tensor(self.init_pos).view(num_envs, 3).to(self.device)
         self.init_rot = torch.Tensor(self.init_rot).view(num_envs, 4).to(self.device)
 
-
-
     def compute_reward(self, actions):
         self.rew_buf[:], self.reset_buf[:] = compute_franka_reward(
             self.reset_buf, self.progress_buf, self.actions,
@@ -444,7 +443,7 @@ class FrankaInsert(BaseTask):
     def pre_physics_step(self, actions):
         self.actions = actions.clone().to(self.device)
         # TODO setting actions
-        self.actions[:, -2:] = 0
+        # self.actions[:, -2:] = 0
         targets = self.franka_dof_targets[:,
                   :self.num_franka_dofs] + self.franka_dof_speed_scales * self.dt * self.actions * self.action_scale
         self.franka_dof_targets[:, :self.num_franka_dofs] = tensor_clamp(
@@ -586,25 +585,6 @@ def compute_franka_reward(
     # print(box_goal_reward)
     rewards += box_goal_reward * box_goal_weight
 
-
-
-    '''
-    # reaching reward
-    gripper_pos = (franka_lfinger_pos + franka_rfinger_pos) / 2.0
-    reach_dist = torch.norm(gripper_pos - box_pos, dim=-1).unsqueeze(-1)
-    zero = to_torch([0]).repeat(num_envs, 1)
-    reach_diff = torch.max(zero, reach_dist)
-
-    reach_reward = 1 - torch.tanh(10.0 * reach_diff)
-    rewards = reach_reward.squeeze()
-
-    box_pos_xy = box_pos[:, 0:2]
-    goal_dist = torch.norm(goal - box_pos_xy, dim=-1).unsqueeze(-1)
-
-    box_goal_reward = 1 - torch.tanh(10.0 * goal_dist)
-
-    rewards += box_goal_reward.squeeze()
-    '''
     # regularization on the actions (summed for each environment)
     action_penalty = torch.sum(actions ** 2, dim=-1)
     rewards -= action_penalty_scale * action_penalty
@@ -614,8 +594,6 @@ def compute_franka_reward(
     reset_buf = torch.where(franka_rfinger_pos[:, 0] < box_pose[:, 0] - distX_offset,
                             torch.ones_like(reset_buf), reset_buf)
     reset_buf = torch.where(progress_buf >= max_episode_length - 1, torch.ones_like(reset_buf), reset_buf)
-
-
 
     return rewards, reset_buf
 

@@ -9,7 +9,7 @@ env:
   startRotationNoise: 0.0
 
   aggregateMode: 0
-  pushDist: 0.12
+  pushDist: 0.16
 
   actionScale: 7.5
   dofVelocityScale: 0.1
