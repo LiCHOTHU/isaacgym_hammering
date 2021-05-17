@@ -75,8 +75,7 @@ class FrankaInsert(BaseTask):
 
         # create some wrapper tensors for different slices
         # this default pos is pre-calculated for grasping
-        self.franka_default_dof_pos = to_torch([0.8306, -0.2572, -0.7640, -2.1175, -0.1887, 1.9239, -2.2056, 0.000, 0.000],
-                                               device=self.device)
+        self.franka_default_dof_pos = to_torch([0.7313, -0.3566, -0.5933, -1.9525, -0.1716, 1.7227, -1.9772, 0.0279, 0.0292],device=self.device)
         self.dof_state = gymtorch.wrap_tensor(dof_state_tensor)
         self.franka_dof_state = self.dof_state.view(self.num_envs, -1, 2)[:, :self.num_franka_dofs]
         self.franka_dof_pos = self.franka_dof_state[..., 0]
@@ -270,8 +269,8 @@ class FrankaInsert(BaseTask):
             self.gym.set_rigid_body_color(env_ptr, table_handle, 0, gymapi.MESH_VISUAL_AND_COLLISION, color)
 
             # add box
-            box_pose.p = gymapi.Vec3(-0.5001, -0.0002, 0.4600)
-            box_pose.r = gymapi.Quat( 0.0000, 0.0000, -0.0007, 1.0000)
+            box_pose.p = gymapi.Vec3(-0.4841, -0.0137, 0.5612)
+            box_pose.r = gymapi.Quat(-0.0048, -0.0734, -0.1039, 0.9919)
             box_actor = self.gym.create_actor(env_ptr, box_asset, box_pose, "box", i, 0)
 
             # set the goal position here
@@ -444,6 +443,8 @@ class FrankaInsert(BaseTask):
 
     def pre_physics_step(self, actions):
         self.actions = actions.clone().to(self.device)
+        # TODO setting actions
+        self.actions[:, -2:] = 0
         targets = self.franka_dof_targets[:,
                   :self.num_franka_dofs] + self.franka_dof_speed_scales * self.dt * self.actions * self.action_scale
         self.franka_dof_targets[:, :self.num_franka_dofs] = tensor_clamp(
@@ -559,8 +560,9 @@ def compute_franka_reward(
     box_pos = box_pose[:, :3]
     franka_gripper_pos = (franka_rfinger_pos + franka_lfinger_pos) * 0.5
 
-    drop_offset = 0.072
+    drop_offset = 0.09
     box_gripper_dist = torch.norm(franka_gripper_pos - box_pos, dim=-1)
+
     # is_dropped = torch.where(box_gripper_dist > drop_offset, torch.tanh(10 * (box_gripper_dist - drop_offset)), to_torch([0.0]).repeat(num_envs))
     is_dropped = torch.where(box_gripper_dist > drop_offset, to_torch([1.0]).repeat(num_envs),
                              to_torch([0.0]).repeat(num_envs))
@@ -607,8 +609,6 @@ def compute_franka_reward(
     action_penalty = torch.sum(actions ** 2, dim=-1)
     rewards -= action_penalty_scale * action_penalty
 
-
-    # TODO Compute the grasping reward
     reset_buf = torch.where(franka_lfinger_pos[:, 0] < box_pose[:, 0] - distX_offset,
                             torch.ones_like(reset_buf), reset_buf)
     reset_buf = torch.where(franka_rfinger_pos[:, 0] < box_pose[:, 0] - distX_offset,

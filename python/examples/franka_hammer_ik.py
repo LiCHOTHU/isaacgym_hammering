@@ -239,6 +239,7 @@ asset_options.fix_base_link = True
 asset_options.disable_gravity = True
 asset_options.flip_visual_attachments = True
 franka_asset = gym.load_asset(sim, asset_root, franka_asset_file, asset_options)
+num_franka_dofs = gym.get_asset_dof_count(franka_asset)
 
 # configure franka dofs
 franka_dof_props = gym.get_asset_dof_properties(franka_asset)
@@ -497,7 +498,7 @@ while not gym.query_viewer_has_closed(viewer):
     pos_target = dof_pos + u
 
     # gripper actions depend on distance between hand and box
-    close_gripper = (box_dist < grasp_offset + 0.025) | gripped
+    close_gripper = (box_dist < grasp_offset + 0.03) | gripped
     # always open the gripper above a certain height, dropping the box and restarting from the beginning
     hand_restart = hand_restart | (box_pos[:, 2] > 0.7)
     keep_going = torch.logical_not(hand_restart)
@@ -512,10 +513,6 @@ while not gym.query_viewer_has_closed(viewer):
     gym.step_graphics(sim)
     gym.draw_viewer(viewer, sim, False)
     gym.sync_frame_time(sim)
-
-    print("pos: ", pos_target)
-    print("box_pos: ", box_pos)
-    print("box_rot: ", box_rot)
 
     # check reward plot
     down_dir = torch.Tensor([0, 0, -1]).to(device).view(1, 3)
@@ -549,6 +546,14 @@ while not gym.query_viewer_has_closed(viewer):
 
     itr += 1
     print(itr)
+
+    if box_pos[:, 2] > 0.55:
+        dof_state_tensor = gym.acquire_dof_state_tensor(sim)
+        franka_dof_state = gymtorch.wrap_tensor(dof_state_tensor).view(num_envs, -1, 2)[:, :num_franka_dofs][..., 0]
+        print("franka_dof: ", franka_dof_state)
+        print("box_pos: ", box_pos)
+        print("box_rot: ", box_rot)
+        import pdb; pdb.set_trace()
 
 '''
 plt.plot(range(199), rewards[1:])
