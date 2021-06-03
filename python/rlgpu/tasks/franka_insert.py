@@ -37,7 +37,6 @@ class FrankaInsert(BaseTask):
         self.action_penalty_scale = self.cfg["env"]["actionPenaltyScale"]
 
         self.debug_viz = self.cfg["env"]["enableDebugVis"]
-        self.pushDist = self.cfg["env"]["pushDist"]
 
         self.up_axis = "z"
         self.up_axis_idx = 2
@@ -75,7 +74,10 @@ class FrankaInsert(BaseTask):
 
         # create some wrapper tensors for different slices
         # this default pos is pre-calculated for grasping
-        self.franka_default_dof_pos = to_torch([0.7313, -0.3566, -0.5933, -1.9525, -0.1716, 1.7227, -1.9772, 0.0279, 0.0292],device=self.device)
+        self.franka_default_dof_pos = to_torch([0.7313, -0.3566, -0.5933, -1.9525, -0.1716, 1.7227, -1.9772, 0.0280, 0.0292],device=self.device)
+        # self.franka_default_dof_pos = to_torch([1.157, -1.066, -0.155, -2.239, -1.841, 1.003, 0.469, 0.035, 0.035],
+        #                                        device=self.device)
+
         self.dof_state = gymtorch.wrap_tensor(dof_state_tensor)
         self.franka_dof_state = self.dof_state.view(self.num_envs, -1, 2)[:, :self.num_franka_dofs]
         self.franka_dof_pos = self.franka_dof_state[..., 0]
@@ -151,7 +153,7 @@ class FrankaInsert(BaseTask):
         # create a box to insert
         box_dims = gymapi.Vec3(0.06, 0.06, 0.12)
         asset_options = gymapi.AssetOptions()
-        asset_options.density = 2000
+        asset_options.density = 200
         asset_options.fix_base_link = False
         box_asset = self.gym.create_box(self.sim, box_dims.x, box_dims.y, box_dims.z, asset_options)
 
@@ -238,6 +240,7 @@ class FrankaInsert(BaseTask):
 
         self.hand_idxs = []
         self.box_idxs = []
+        self.franka_actor_idxs = []
         self.franka_actor_idxs = []
         self.box_actor_idxs = []
 
@@ -344,7 +347,6 @@ class FrankaInsert(BaseTask):
             self.frankas.append(franka_actor)
             self.boxes.append(box_actor)
 
-
         self.box_init_state = to_torch(self.box_init_state, device=self.device, dtype=torch.float).view(
             self.num_envs, 13)
 
@@ -443,7 +445,7 @@ class FrankaInsert(BaseTask):
     def pre_physics_step(self, actions):
         self.actions = actions.clone().to(self.device)
         # TODO setting actions
-        # self.actions[:, -2:] = 0
+        self.actions[:, -2:] = 0
         targets = self.franka_dof_targets[:,
                   :self.num_franka_dofs] + self.franka_dof_speed_scales * self.dt * self.actions * self.action_scale
         self.franka_dof_targets[:, :self.num_franka_dofs] = tensor_clamp(
@@ -487,7 +489,7 @@ class FrankaInsert(BaseTask):
             self.gym.refresh_rigid_body_state_tensor(self.sim)
             '''
             for i in range(self.num_envs):
-
+        
                 px = (self.hammer_pos[i] + quat_apply(self.hammer_rot[i],
                                                       to_torch([1, 0, 0], device=self.device) * 0.2)).cpu().numpy()
                 py = (self.hammer_pos[i] + quat_apply(self.hammer_rot[i],
@@ -559,7 +561,7 @@ def compute_franka_reward(
     box_pos = box_pose[:, :3]
     franka_gripper_pos = (franka_rfinger_pos + franka_lfinger_pos) * 0.5
 
-    drop_offset = 0.09
+    drop_offset = 0.085
     box_gripper_dist = torch.norm(franka_gripper_pos - box_pos, dim=-1)
 
     # is_dropped = torch.where(box_gripper_dist > drop_offset, torch.tanh(10 * (box_gripper_dist - drop_offset)), to_torch([0.0]).repeat(num_envs))
@@ -569,6 +571,7 @@ def compute_franka_reward(
     drop_penaly = -10
     rewards = drop_penaly * is_dropped
 
+    '''
     # reaching to sub-goal
     box_sub_goal_dist = torch.norm(sub_goal - box_pos, dim=-1)
     box_sub_goal_weight = 3
@@ -577,11 +580,12 @@ def compute_franka_reward(
     rewards += box_sub_goal_reward * box_sub_goal_weight
 
     is_closed_enough = torch.where(box_sub_goal_dist < 0.02, to_torch([1.0]).repeat(num_envs), to_torch([0.0]).repeat(num_envs))
+    '''
 
     # reaching to goal
     box_goal_weight = 5
     box_goal_dist = torch.norm(goal - box_pos, dim=-1)
-    box_goal_reward = (1 - torch.tanh(10.0 * box_goal_dist))* is_closed_enough
+    box_goal_reward = (1 - torch.tanh(10.0 * box_goal_dist))
     # print(box_goal_reward)
     rewards += box_goal_reward * box_goal_weight
 

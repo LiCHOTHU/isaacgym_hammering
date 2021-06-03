@@ -412,7 +412,6 @@ class FrankaPush(BaseTask):
             self.gym.add_lines(self.viewer, self.envs[i], 9, [p0[0], p0[1], p0[2], p1[0], p1[1], p1[2]], [1, 0, 0])  # red
         '''
 
-
         # debug viz
         self.debug_viz = False
         if self.viewer and self.debug_viz:

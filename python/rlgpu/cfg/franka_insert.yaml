@@ -9,11 +9,9 @@ env:
   startRotationNoise: 0.0
 
   aggregateMode: 0
-  pushDist: 0.12
 
   actionScale: 7.5
   dofVelocityScale: 0.1
-  boxSize: 0.16
 
   rewardScale: 4.0
   actionPenaltyScale: 0.01
