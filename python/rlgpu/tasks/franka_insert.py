@@ -241,7 +241,6 @@ class FrankaInsert(BaseTask):
         self.hand_idxs = []
         self.box_idxs = []
         self.franka_actor_idxs = []
-        self.franka_actor_idxs = []
         self.box_actor_idxs = []
 
         self.init_pos = []
